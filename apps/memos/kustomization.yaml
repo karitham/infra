@@ -3,9 +3,7 @@ resources:
   - ingress.yaml
   - pvc.yaml
   - image-upgrader.yaml
-
 namespace: memos
-
 images:
   - name: neosmemo/memos
-    newTag: 0.22.3 # {"$imagepolicy": "memos:memos:tag"}
+    newTag: 0.22.4 # {"$imagepolicy": "memos:memos:tag"}

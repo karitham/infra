@@ -39,4 +39,4 @@ spec:
     push:
       branch: main
   update:
-    path: ./apps/memos/deployment.yaml
+    path: ./apps/memos

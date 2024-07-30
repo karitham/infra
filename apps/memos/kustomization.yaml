@@ -5,3 +5,7 @@ resources:
   - image-upgrader.yaml
 
 namespace: memos
+
+images:
+  - name: neosmemo/memos
+    newTag: 0.22.3 # {"$imagepolicy": "memos:memos:tag"}

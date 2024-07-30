@@ -2,5 +2,6 @@ resources:
   - deployment.yaml
   - ingress.yaml
   - pvc.yaml
+  - image-upgrader.yaml
 
 namespace: memos

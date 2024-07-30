@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: memos
-          image: neosmemo/memos:0.22.3
+          image: neosmemo/memos:0.22.3 # {"$imagepolicy": "memos:memos"}
           resources:
             requests:
               memory: "128Mi"

@@ -1,0 +1,10 @@
+resources:
+  - secret.yaml
+  - bot.yaml
+  - api.yaml
+  - ingress.yaml
+images:
+  - name: ghcr.io/karitham/waifubot
+    digest: sha256:ec16043add269d7ad6ba6d6f60833455da887be1b2e650c286c3ac2fbcad01cb
+  - name: ghcr.io/go-waifubot/api:postgres
+    digest: sha256:759a106dfb063dc7086a118490702272bb0eb10a9c75761a598f162158dba756

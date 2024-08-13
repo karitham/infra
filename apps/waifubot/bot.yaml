@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: bot
+spec:
+  serviceName: "bot"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bot
+  template:
+    metadata:
+      labels:
+        app: bot
+    spec:
+      containers:
+        - name: bot
+          image: ghcr.io/karitham/waifubot:corde
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ROLL_TIMEOUT
+              value: 4h
+            - name: TOKENS_NEEDED
+              value: "4"
+            - name: INTERACTION_NEEDED
+              value: "6"
+            - name: PORT
+              value: "8080"
+          envFrom:
+            - secretRef:
+                name: bot-env
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bot
+spec:
+  selector:
+    app: bot
+  ports:
+    - port: 8080
+      targetPort: 8080

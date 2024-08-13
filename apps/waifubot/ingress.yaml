@@ -9,7 +9,6 @@ spec:
   tls:
     - hosts:
         - waifubot.${TSNET}
-        - waifuapi.karitham.dev
       secretName: waifubot-tls-secret
   rules:
     - http:

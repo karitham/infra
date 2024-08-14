@@ -5,6 +5,6 @@ resources:
   - ingress.yaml
 images:
   - name: ghcr.io/karitham/waifubot
-    digest: sha256:ec16043add269d7ad6ba6d6f60833455da887be1b2e650c286c3ac2fbcad01cb
-  - name: ghcr.io/go-waifubot/api:postgres
+    digest: sha256:07a5d9de6f8974d9eaa92b674efddfd02f8e1a8ae81d37e7f98e71d6863e4ce6
+  - name: ghcr.io/go-waifubot/api
     digest: sha256:759a106dfb063dc7086a118490702272bb0eb10a9c75761a598f162158dba756

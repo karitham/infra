@@ -27,3 +27,32 @@ spec:
                 name: api
                 port:
                   number: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: public
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - waifubot.karitham.dev
+      secretName: waifubot-tls-secret
+  rules:
+    - host: waifubot.karitham.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: bot
+                port:
+                  number: 8080
+          - path: /user
+            pathType: Prefix
+            backend:
+              service:
+                name: api
+                port:
+                  number: 8080

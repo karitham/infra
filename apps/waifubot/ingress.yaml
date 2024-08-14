@@ -32,14 +32,16 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: public
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
 spec:
   ingressClassName: traefik
   tls:
     - hosts:
-        - waifubot.karitham.dev
-      secretName: waifubot-tls-secret
+        - waifuapi.karitham.dev
+      secretName: waifuapi-tls-secret
   rules:
-    - host: waifubot.karitham.dev
+    - host: waifuapi.karitham.dev
       http:
         paths:
           - path: /

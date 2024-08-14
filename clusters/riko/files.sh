@@ -21,6 +21,7 @@ patches:
       version: v1
 resources:
   - flux-system
+  - core
 EOF
 
 for file in $(find "$(dirname "$0")/apps" -name '*.yaml'); do

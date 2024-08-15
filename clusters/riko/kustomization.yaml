@@ -21,10 +21,11 @@ patches:
 resources:
   - flux-system
   - core
-  - apps/vikunja.yaml
   - apps/klum.yaml
-  - apps/waifubot.yaml
-  - apps/plex.yaml
+  - apps/minecraft.yaml
   - apps/transmission.yaml
   - apps/tailscale.yaml
+  - apps/plex.yaml
+  - apps/waifubot.yaml
   - apps/memos.yaml
+  - apps/vikunja.yaml

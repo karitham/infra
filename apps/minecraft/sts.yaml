@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: mc
+  name: mc
+spec:
+  replicas: 1
+  serviceName: mc
+  selector:
+    matchLabels:
+      app: mc
+  template:
+    metadata:
+      labels:
+        app: mc
+    spec:
+      containers:
+        - name: mc
+          image: itzg/minecraft-server:java21-graalvm
+          env:
+            - name: EULA
+              value: "TRUE"
+            - name: MC_PORT
+              value: "25565"
+            - name: INIT_MEMORY
+              value: 1G
+            - name: MAX_MEMORY
+              value: 4G
+          envFrom:
+            - secretRef:
+                name: mc-env
+          volumeMounts:
+            - mountPath: /data
+              name: data
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 5Gi

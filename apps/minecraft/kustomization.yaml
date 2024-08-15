@@ -1,0 +1,4 @@
+resources:
+  - sts.yaml
+  - svc.yaml
+  - secret.yaml

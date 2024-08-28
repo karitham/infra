@@ -22,10 +22,10 @@ resources:
   - flux-system
   - core
   - apps/klum.yaml
-  - apps/minecraft.yaml
-  - apps/transmission.yaml
-  - apps/tailscale.yaml
-  - apps/plex.yaml
-  - apps/waifubot.yaml
   - apps/memos.yaml
+  - apps/minecraft.yaml
+  - apps/plex.yaml
+  - apps/tailscale.yaml
+  - apps/transmission.yaml
   - apps/vikunja.yaml
+  - apps/waifubot.yaml

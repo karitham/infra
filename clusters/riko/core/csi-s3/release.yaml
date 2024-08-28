@@ -1,0 +1,40 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: yandex-s3
+spec:
+  interval: 1h
+  url: https://yandex-cloud.github.io/k8s-csi-s3/charts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: csi-s3
+spec:
+  targetNamespace: csi-s3
+  interval: 5m
+  chart:
+    spec:
+      chart: csi-s3
+      version: "*"
+      sourceRef:
+        kind: HelmRepository
+        name: yandex-s3
+  install:
+    remediation:
+      retries: 3
+  values:
+    images:
+      registrar: registry.k8s.io/sig-storage/csi-node-driver-registrar:v2.9.0
+      provisioner: registry.k8s.io/sig-storage/csi-provisioner:v3.6.0
+      # fork while I wait for https://github.com/yandex-cloud/k8s-csi-s3/pull/51 to be merged
+      csi: ghcr.io/motoki317/k8s-csi-s3:0.40.8-p1
+
+    storageClass:
+      create: true
+      name: csi-s3
+      singleBucket: "riko-csi-s3"
+
+    secret:
+      create: false
+      name: csi-s3-secret

@@ -24,6 +24,6 @@ resources:
   - core
 EOF
 
-for file in $(find "$(dirname "$0")/apps" -name '*.yaml' | sort -d); do
-  echo "  - $(realpath --relative-to="$(dirname "$0")" "$file")" >>$(dirname "$0")/kustomization.yaml
+for file in $(ls "$(dirname "$0")/apps" | sort -d); do
+  echo "  - apps/$file" >>$(dirname "$0")/kustomization.yaml
 done

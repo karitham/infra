@@ -21,6 +21,7 @@ patches:
 resources:
   - flux-system
   - core
+  - apps/alloy
   - apps/klum.yaml
   - apps/memos.yaml
   - apps/minecraft.yaml

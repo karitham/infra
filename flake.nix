@@ -13,31 +13,33 @@
   in {
     devShells = forEachSupportedSystem ({pkgs}: {
       default = pkgs.mkShell {
-              packages = let
-                alloy = pkgs.stdenv.mkDerivation {
-                  name = "alloy";
-                  version = "1.3.1";
-                  src = pkgs.fetchzip {
-                    url = "https://github.com/grafana/alloy/releases/download/v1.3.1/alloy-linux-amd64.zip";
-                    sha256 = "sha256-v6/1Qt9qZGhwhP6qtEvXmvS+y0QLW1Mvnouql+HO6C0="; # Replace with actual hash
-                  };
-                  installPhase = ''
-                    mkdir -p $out/bin
-                    cp alloy-linux-amd64 $out/bin/alloy
-                    chmod +x $out/bin/alloy
-                  '';
-                };
-              in with pkgs; [
-          kubectx
-          kubectl
-          kubernetes-helm
-          kubernetes-helmPlugins.helm-diff
-          helmfile
-          sops
-          fluxcd
-          age
-          alloy
-        ];
+        packages = let
+          alloy = pkgs.stdenv.mkDerivation {
+            name = "alloy";
+            version = "1.3.1";
+            src = pkgs.fetchzip {
+              url = "https://github.com/grafana/alloy/releases/download/v1.3.1/alloy-linux-amd64.zip";
+              sha256 = "sha256-v6/1Qt9qZGhwhP6qtEvXmvS+y0QLW1Mvnouql+HO6C0="; # Replace with actual hash
+            };
+            installPhase = ''
+              mkdir -p $out/bin
+              cp alloy-linux-amd64 $out/bin/alloy
+              chmod +x $out/bin/alloy
+            '';
+          };
+        in
+          with pkgs; [
+            kubectx
+            kubectl
+            kubernetes-helm
+            kubernetes-helmPlugins.helm-diff
+            helmfile
+            sops
+            fluxcd
+            age
+            alloy
+            pre-commit
+          ];
       };
     });
   };

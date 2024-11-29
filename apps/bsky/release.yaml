@@ -29,10 +29,12 @@ spec:
       dataStorage:
         size: 10Gi
         mountPath: /pds
+        storageClass: local-path
     ingress:
       enabled: true
       className: "traefik"
       annotations:
+        traefik.ingress.kubernetes.io/router.tls: "true"
         cert-manager.io/cluster-issuer: "letsencrypt"
       hosts:
         - host: "*.pds.0xf.fr"

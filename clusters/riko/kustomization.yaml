@@ -22,6 +22,7 @@ resources:
   - flux-system
   - core
   - apps/alloy
+  - apps/bsky.yaml
   - apps/klum.yaml
   - apps/memos.yaml
   - apps/minecraft.yaml

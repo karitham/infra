@@ -20,6 +20,8 @@ spec:
         kind: HelmRepository
         name: bluesky-pds
   values:
+    image:
+      tag: 0.4.74
     pds:
       config:
         hostname: pds.0xf.fr

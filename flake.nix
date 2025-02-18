@@ -14,11 +14,11 @@
     devShells = forEachSupportedSystem ({pkgs}: {
       default = pkgs.mkShell {
         packages = let
-          alloy = pkgs.stdenv.mkDerivation {
+          alloy = pkgs.stdenv.mkDerivation rec {
             name = "alloy";
-            version = "1.3.1";
+            version = "1.6.1";
             src = pkgs.fetchzip {
-              url = "https://github.com/grafana/alloy/releases/download/v1.3.1/alloy-linux-amd64.zip";
+              url = "https://github.com/grafana/alloy/releases/download/v${version}/alloy-linux-amd64.zip";
               sha256 = "sha256-v6/1Qt9qZGhwhP6qtEvXmvS+y0QLW1Mvnouql+HO6C0="; # Replace with actual hash
             };
             installPhase = ''

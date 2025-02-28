@@ -19,7 +19,7 @@
             version = "1.6.1";
             src = pkgs.fetchzip {
               url = "https://github.com/grafana/alloy/releases/download/v${version}/alloy-linux-amd64.zip";
-              sha256 = "sha256-v6/1Qt9qZGhwhP6qtEvXmvS+y0QLW1Mvnouql+HO6C0="; # Replace with actual hash
+              sha256 = "sha256-9U0HDvTzsDAtpvNsG/znpqrUfGdaljgQ6K8UJkJn/RA=";
             };
             installPhase = ''
               mkdir -p $out/bin

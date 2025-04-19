@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: ghcr.io/karitham/waifubot:v1.0.1
+          image: ghcr.io/karitham/waifubot:v1.0.3
           command: [/bin/api]
           ports:
             - containerPort: 8080

@@ -15,7 +15,8 @@ spec:
     spec:
       containers:
         - name: api
-          image: ghcr.io/karitham/waifubot:v1.0.4
+          image: ghcr.io/karitham/waifubot:main
+          imagePullPolicy: Always
           command: [/bin/api]
           ports:
             - containerPort: 8080

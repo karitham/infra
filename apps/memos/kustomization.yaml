@@ -6,4 +6,4 @@ resources:
 namespace: memos
 images:
   - name: neosmemo/memos
-    newTag: 0.24.2 # {"$imagepolicy": "memos:memos:tag"}
+    newTag: 0.24.3 # {"$imagepolicy": "memos:memos:tag"}

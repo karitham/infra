@@ -1,0 +1,126 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+    name: waifubot-pg
+spec:
+    instances: 1
+    resources:
+        requests:
+            memory: 512Mi
+            cpu: 200m
+        limits:
+            memory: 1Gi
+            cpu: 500m
+    storage:
+        size: 2Gi
+        storageClass: local-path
+    monitoring:
+        enablePodMonitor: true
+    backup:
+        barmanObjectStore:
+            destinationPath: s3://waifubot-cnpg/backups/
+            s3Credentials:
+                accessKeyId:
+                    name: pg-backup-s3
+                    key: accessKeyId
+                secretAccessKey:
+                    name: pg-backup-s3
+                    key: secretAccessKey
+            wal:
+                compression: gzip
+            data:
+                compression: gzip
+            endpointURL: ENC[AES256_GCM,data:PCBKNsDNCmSj89Uc8q/gwW/8wCfqm3oVcYOas9oFyEFtLt1ho2FA7ezncBC2FJGFMpYwi/Ef363OtHeKwR94kVQ=,iv:5vxZd8RWrd6xX6lIW0xj9zCmDShF6s100A1UfqqDnkk=,tag:WpTQnRUvPeFBnifsLuQOww==,type:str]
+    bootstrap:
+        initdb:
+            database: waifubot
+            owner: waifubot
+            secret:
+                name: pg-credentials
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age:
+        - recipient: age189p4fntprw5aj5ss9ze9yz6jxxypylhxthwr7pnqjusfw2xl6cuqdj3lse
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSByUHdLYys2MDl6bUxoa0lk
+            cUVKQ25SZ1F3YmdmdHVtWHUrcWoxekhjeGwwCkpQUFlENjNYTTVUUll6Qk1VY3FD
+            eXRwT29zOFBYeUswdS9udVBtVWZuWTgKLS0tIHpqWmc0WDFINEdwdTV4S1U3c1NB
+            SXJudXVZSUcrS2FzTUhuckxPNW5DVnMKuGHPpU6LQ+tfClAo8HZ7+qApb1un+eGI
+            Xp4Gk8uut4zIIwjizU1vs36C2Y3tZ2EA2JpSsJ041OIFw03lRpIa4Q==
+            -----END AGE ENCRYPTED FILE-----
+        - recipient: age1g5g3e2kl2kmrxdjlwzl884dhjlfz07jsulhfrdttme56dh45k3rspeka7f
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBkOHlPa1hiR3oxZGtzU3VI
+            VkpxWXBBSm1BT0F1VDk5RXNORThIQXNHRWxnCi9aTkM3TnowKzFVYWdFQXRxdWxa
+            K25xbXZsYXBLQ1poRitRdjRLMTNCaFkKLS0tIGxtTzQyTituamZBTXJCaHhGT0xR
+            LzYySEFjbUwrSkcyUUYrU2I0ai81Y2MKomilaIKkyuOVNBR5DwGc05Qd9HZ4TtGf
+            2V8Av736JQiQ4EFkM8GVR+1dTE5GDequ16MVwJ7CrkImQVwqFa7XAA==
+            -----END AGE ENCRYPTED FILE-----
+        - recipient: age1g4q5q0lytudrnvvmdgxnlhwu37lak0qgk8kf4dahg4md87wj0ytq2l2xuc
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBUWW9HT3NVUVF1aXlIa1Zo
+            TmR4elhpcDNPa3pjRkZjbHhQQ1I1N0FqZEVZCksxNmx0d2xIRnBQZzVuTHFsNUlI
+            bTE4ZU90SjUxakZrTk94SU1McXZydGsKLS0tIHRsNGUzVENTUEwzT3MwSFRrcmxY
+            eDZPRFp0QUQrVGVhMklJeU1kRlR6RXcKSLJBw7mk+kWvjIjwGSROlbsNAOyJlvZo
+            tHeX7cCKzDB/+mnmXL11DSpi3tChcMqrjnRpMZvVcHMCLfTt9g6v/w==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2025-06-20T21:54:06Z"
+    mac: ENC[AES256_GCM,data:YkcGpgFjQvs5CLfUyWpl0gnV2jnnFfq2Tx63YqFO42bhilwLSj0uRBG8Xp2KnvMZuC5qf3zG+qkts8wba2RAUdc39ijj/dsn3ul56w9kr6oMpcMmJ7TCgPa3ltkoJJ3OObdyERyWWNvsYaXAZ7nTBqt1fdASq7ejLoYyxNQblzU=,iv:DyWnCfsWCFIw4nTC6fcvS7928LYTg+PDxDozR3bTQqc=,tag:q5xBvUeUGbBYZtfpxq94bw==,type:str]
+    pgp: []
+    encrypted_regex: ^endpointURL$
+    version: 3.9.4
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+    name: waifubot-pg-daily-backup
+spec:
+    backupOwnerReference: self
+    cluster:
+        name: waifubot-pg
+    immediate: true
+    schedule: 0 0 2 * * *
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age:
+        - recipient: age189p4fntprw5aj5ss9ze9yz6jxxypylhxthwr7pnqjusfw2xl6cuqdj3lse
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSByUHdLYys2MDl6bUxoa0lk
+            cUVKQ25SZ1F3YmdmdHVtWHUrcWoxekhjeGwwCkpQUFlENjNYTTVUUll6Qk1VY3FD
+            eXRwT29zOFBYeUswdS9udVBtVWZuWTgKLS0tIHpqWmc0WDFINEdwdTV4S1U3c1NB
+            SXJudXVZSUcrS2FzTUhuckxPNW5DVnMKuGHPpU6LQ+tfClAo8HZ7+qApb1un+eGI
+            Xp4Gk8uut4zIIwjizU1vs36C2Y3tZ2EA2JpSsJ041OIFw03lRpIa4Q==
+            -----END AGE ENCRYPTED FILE-----
+        - recipient: age1g5g3e2kl2kmrxdjlwzl884dhjlfz07jsulhfrdttme56dh45k3rspeka7f
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBkOHlPa1hiR3oxZGtzU3VI
+            VkpxWXBBSm1BT0F1VDk5RXNORThIQXNHRWxnCi9aTkM3TnowKzFVYWdFQXRxdWxa
+            K25xbXZsYXBLQ1poRitRdjRLMTNCaFkKLS0tIGxtTzQyTituamZBTXJCaHhGT0xR
+            LzYySEFjbUwrSkcyUUYrU2I0ai81Y2MKomilaIKkyuOVNBR5DwGc05Qd9HZ4TtGf
+            2V8Av736JQiQ4EFkM8GVR+1dTE5GDequ16MVwJ7CrkImQVwqFa7XAA==
+            -----END AGE ENCRYPTED FILE-----
+        - recipient: age1g4q5q0lytudrnvvmdgxnlhwu37lak0qgk8kf4dahg4md87wj0ytq2l2xuc
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBUWW9HT3NVUVF1aXlIa1Zo
+            TmR4elhpcDNPa3pjRkZjbHhQQ1I1N0FqZEVZCksxNmx0d2xIRnBQZzVuTHFsNUlI
+            bTE4ZU90SjUxakZrTk94SU1McXZydGsKLS0tIHRsNGUzVENTUEwzT3MwSFRrcmxY
+            eDZPRFp0QUQrVGVhMklJeU1kRlR6RXcKSLJBw7mk+kWvjIjwGSROlbsNAOyJlvZo
+            tHeX7cCKzDB/+mnmXL11DSpi3tChcMqrjnRpMZvVcHMCLfTt9g6v/w==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2025-06-20T21:54:06Z"
+    mac: ENC[AES256_GCM,data:YkcGpgFjQvs5CLfUyWpl0gnV2jnnFfq2Tx63YqFO42bhilwLSj0uRBG8Xp2KnvMZuC5qf3zG+qkts8wba2RAUdc39ijj/dsn3ul56w9kr6oMpcMmJ7TCgPa3ltkoJJ3OObdyERyWWNvsYaXAZ7nTBqt1fdASq7ejLoYyxNQblzU=,iv:DyWnCfsWCFIw4nTC6fcvS7928LYTg+PDxDozR3bTQqc=,tag:q5xBvUeUGbBYZtfpxq94bw==,type:str]
+    pgp: []
+    encrypted_regex: ^endpointURL$
+    version: 3.9.4

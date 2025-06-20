@@ -5,6 +5,12 @@ creation_rules:
       age189p4fntprw5aj5ss9ze9yz6jxxypylhxthwr7pnqjusfw2xl6cuqdj3lse,
       age1g5g3e2kl2kmrxdjlwzl884dhjlfz07jsulhfrdttme56dh45k3rspeka7f,
       age1g4q5q0lytudrnvvmdgxnlhwu37lak0qgk8kf4dahg4md87wj0ytq2l2xuc
+  - encrypted_regex: "^endpointURL$"
+    path_regex: ^apps/waifubot/pg.yaml$
+    age: >-
+      age189p4fntprw5aj5ss9ze9yz6jxxypylhxthwr7pnqjusfw2xl6cuqdj3lse,
+      age1g5g3e2kl2kmrxdjlwzl884dhjlfz07jsulhfrdttme56dh45k3rspeka7f,
+      age1g4q5q0lytudrnvvmdgxnlhwu37lak0qgk8kf4dahg4md87wj0ytq2l2xuc
   - encrypted_regex: ^(data|stringData)$
     age: >-
       age189p4fntprw5aj5ss9ze9yz6jxxypylhxthwr7pnqjusfw2xl6cuqdj3lse,

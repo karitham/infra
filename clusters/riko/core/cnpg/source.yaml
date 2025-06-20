@@ -1,0 +1,13 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: cnpg
+  namespace: flux-system
+spec:
+  interval: 30m
+  url: https://github.com/cloudnative-pg/cloudnative-pg
+  ref:
+    tag: v1.26.0
+  ignore: |
+    /*
+    !/releases/cnpg-1.26.0.yaml

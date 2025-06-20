@@ -1,0 +1,3 @@
+resources:
+  - source.yaml
+  - kustomization-cnpg.yaml

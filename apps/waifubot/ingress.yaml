@@ -53,8 +53,11 @@ spec:
                   number: 8080
           - path: /api
             pathType: Prefix
-            backend:
+            backend: &api
               service:
                 name: api
                 port:
                   number: 8080
+          - path: /user
+            pathType: Prefix
+            backend: *api

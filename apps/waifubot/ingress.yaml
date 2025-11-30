@@ -1,36 +1,6 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: access
-  annotations:
-    tailscale.com/funnel: "true"
-spec:
-  ingressClassName: tailscale
-  tls:
-    - hosts:
-        - waifubot.${TSNET}
-      secretName: waifubot-tls-secret
-  rules:
-    - http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: bot
-                port:
-                  number: 8080
-          - path: /api
-            pathType: Prefix
-            backend:
-              service:
-                name: api
-                port:
-                  number: 8080
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
   name: public
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
@@ -45,7 +15,7 @@ spec:
       http:
         paths:
           - path: /
-            pathType: Prefix
+            pathType: Exact
             backend:
               service:
                 name: bot

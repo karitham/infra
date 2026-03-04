@@ -15,19 +15,9 @@ spec:
       http:
         paths:
           - path: /
-            pathType: Exact
+            pathType: Prefix
             backend:
               service:
                 name: bot
                 port:
                   number: 8080
-          - path: /api
-            pathType: Prefix
-            backend: &api
-              service:
-                name: api
-                port:
-                  number: 8080
-          - path: /user
-            pathType: Prefix
-            backend: *api

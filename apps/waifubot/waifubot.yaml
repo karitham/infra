@@ -32,8 +32,6 @@ spec:
               value: "6"
             - name: PORT
               value: "8080"
-            - name: SYNC
-              value: "true"
           envFrom:
             - secretRef:
                 name: bot-env

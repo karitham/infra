@@ -24,6 +24,7 @@ resources:
   - apps/alloy
   - apps/memos.yaml
   - apps/minecraft.yaml
+  - apps/minecraft-geyser.yaml
   - apps/plex.yaml
   - apps/tailscale.yaml
   - apps/transmission.yaml

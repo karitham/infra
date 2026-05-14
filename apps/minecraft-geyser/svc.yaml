@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: mc-geyser
+  name: mc-geyser
+spec:
+  ports:
+    - port: 25565
+      targetPort: 25565
+      nodePort: 30566
+      name: java
+      protocol: TCP
+    - port: 19132
+      targetPort: 19132
+      nodePort: 30191
+      name: bedrock
+      protocol: UDP
+  selector:
+    app: mc-geyser
+  type: NodePort

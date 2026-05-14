@@ -1,7 +1,0 @@
-kind: User
-apiVersion: klum.cattle.io/v1alpha1
-metadata:
-  name: ozen
-spec:
-  clusterRoles:
-    - cluster-admin

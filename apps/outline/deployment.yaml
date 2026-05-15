@@ -48,11 +48,11 @@ spec:
             - name: OIDC_AUTH_URI
               value: "https://id.${TSNET}/authorize"
             - name: OIDC_TOKEN_URI
-              value: "https://id.${TSNET}/api/oidc/token"
+              value: "http://pocket-id.pocket-id.svc.cluster.local:1411/api/oidc/token"
             - name: OIDC_USERINFO_URI
-              value: "https://id.${TSNET}/api/oidc/userinfo"
+              value: "http://pocket-id.pocket-id.svc.cluster.local:1411/api/oidc/userinfo"
             - name: OIDC_LOGOUT_URI
-              value: "https://id.${TSNET}/api/oidc/end-session"
+              value: "http://pocket-id.pocket-id.svc.cluster.local:1411/api/oidc/end-session"
             - name: OIDC_DISPLAY_NAME
               value: "Pocket ID"
             - name: OIDC_USERNAME_CLAIM

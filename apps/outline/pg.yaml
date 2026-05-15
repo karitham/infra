@@ -1,0 +1,15 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: outline-pg
+spec:
+  instances: 1
+  storage:
+    size: 5Gi
+    storageClass: local-path
+  bootstrap:
+    initdb:
+      database: outline
+      owner: outline
+      secret:
+        name: pg-credentials

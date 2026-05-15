@@ -1,0 +1,8 @@
+resources:
+  - deployment.yaml
+  - redis.yaml
+  - pg.yaml
+  - pvc.yaml
+  - ingress.yaml
+  - secret.yaml
+namespace: outline

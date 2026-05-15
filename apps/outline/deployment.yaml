@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: outline
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: outline
+  template:
+    metadata:
+      labels:
+        app: outline
+    spec:
+      containers:
+        - name: outline
+          image: outlinewiki/outline:1.8.0-1
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "100m"
+            limits:
+              memory: "1Gi"
+              cpu: "1"
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: URL
+              value: "https://outline.${TSNET}"
+            - name: PORT
+              value: "3000"
+            - name: WEB_CONCURRENCY
+              value: "1"
+            - name: REDIS_URL
+              value: "redis://redis:6379"
+            - name: PGSSLMODE
+              value: "disable"
+            - name: FORCE_HTTPS
+              value: "false"
+            - name: ENABLE_UPDATES
+              value: "false"
+            - name: FILE_STORAGE
+              value: "local"
+            - name: FILE_STORAGE_LOCAL_ROOT_DIR
+              value: "/var/lib/outline/data"
+            - name: OIDC_CLIENT_ID
+              value: "37f25fe5-107f-44d5-91b9-57c9c744e85b"
+            - name: OIDC_AUTH_URI
+              value: "https://id.${TSNET}/authorize"
+            - name: OIDC_TOKEN_URI
+              value: "https://id.${TSNET}/api/oidc/token"
+            - name: OIDC_USERINFO_URI
+              value: "https://id.${TSNET}/api/oidc/userinfo"
+            - name: OIDC_LOGOUT_URI
+              value: "https://id.${TSNET}/api/oidc/end-session"
+            - name: OIDC_DISPLAY_NAME
+              value: "Pocket ID"
+            - name: OIDC_USERNAME_CLAIM
+              value: "preferred_username"
+            - name: OIDC_SCOPES
+              value: "openid profile email"
+          envFrom:
+            - secretRef:
+                name: outline-env
+          ports:
+            - containerPort: 3000
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/outline/data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: outline-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: outline
+spec:
+  selector:
+    app: outline
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000

@@ -1,5 +1,6 @@
 resources:
   - alloy
+  - outline.yaml
   - memos.yaml
   - minecraft.yaml
   - minecraft-geyser.yaml

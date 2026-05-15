@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pocket-id
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pocket-id
+  template:
+    metadata:
+      labels:
+        app: pocket-id
+    spec:
+      containers:
+        - name: pocket-id
+          image: ghcr.io/pocket-id/pocket-id:v2.7.0
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          env:
+            - name: APP_URL
+              value: "https://id.${TSNET}"
+            - name: TRUST_PROXY
+              value: "true"
+            - name: ANALYTICS_DISABLED
+              value: "true"
+            - name: VERSION_CHECK_DISABLED
+              value: "true"
+            - name: ENCRYPTION_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: pocket-id-secret
+                  key: ENCRYPTION_KEY
+          ports:
+            - containerPort: 1411
+          livenessProbe:
+            exec:
+              command:
+                - /app/pocket-id
+                - healthcheck
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          volumeMounts:
+            - name: data
+              mountPath: /app/data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: pocket-id-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pocket-id
+spec:
+  selector:
+    app: pocket-id
+  ports:
+    - protocol: TCP
+      port: 1411
+      targetPort: 1411

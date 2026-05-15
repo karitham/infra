@@ -30,3 +30,4 @@ resources:
   - apps/transmission.yaml
   - apps/vikunja.yaml
   - apps/waifubot.yaml
+  - apps/pocket-id.yaml

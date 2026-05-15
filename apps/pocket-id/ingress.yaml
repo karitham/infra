@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pocket-id
+spec:
+  ingressClassName: tailscale
+  tls:
+    - hosts:
+        - id.${TSNET}
+      secretName: pocket-id-tls-secret
+  rules:
+    - host: id.${TSNET}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: pocket-id
+                port:
+                  number: 1411

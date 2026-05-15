@@ -1,0 +1,11 @@
+resources:
+  - alloy
+  - memos.yaml
+  - minecraft.yaml
+  - minecraft-geyser.yaml
+  - plex.yaml
+  - pocket-id.yaml
+  - tailscale.yaml
+  - transmission.yaml
+  - vikunja.yaml
+  - waifubot.yaml

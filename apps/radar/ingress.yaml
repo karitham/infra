@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: radar
+spec:
+  ingressClassName: tailscale
+  tls:
+    - hosts:
+        - k8s.${TSNET}
+      secretName: radar-tls-secret
+  rules:
+    - host: k8s.${TSNET}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: radar
+                port:
+                  number: 9280

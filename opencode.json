@@ -1,0 +1,9 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "radar": {
+      "type": "remote",
+      "url": "https://k8s.dolly-ruffe.ts.net/mcp"
+    }
+  }
+}

@@ -17,6 +17,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: radar
+                name: radar-radar
                 port:
                   number: 9280

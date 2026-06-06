@@ -1,9 +1,0 @@
-resources:
-  - release.yaml
-configMapGenerator:
-  - name: helm-config
-    options:
-      disableNameSuffixHash: true
-    namespace: vikunja
-    files:
-      - values.yaml

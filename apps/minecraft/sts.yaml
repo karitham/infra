@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: mc
-          image: itzg/minecraft-server:java21
+          image: itzg/minecraft-server:java25
           env:
             - name: EULA
               value: "TRUE"

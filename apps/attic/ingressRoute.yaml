@@ -2,8 +2,6 @@ apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: attic
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
 spec:
   entryPoints:
     - websecure

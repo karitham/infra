@@ -3,6 +3,7 @@ resources:
   - secret.yaml
   - deployment.yaml
   - service.yaml
+  - certificate.yaml
   - ingressRoute.yaml
   - serversTransport.yaml
 namespace: attic

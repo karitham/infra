@@ -46,6 +46,7 @@
                 alloy
                 pre-commit
                 gitleaks
+                jq
               ];
           };
         }

@@ -3,4 +3,8 @@ resources:
   - ingress.yaml
   - pvc.yaml
   - secret.yaml
+  - image-upgrader.yaml
 namespace: pocket-id
+images:
+  - name: ghcr.io/pocket-id/pocket-id
+    newTag: v2.7.0 # {"$imagepolicy": "pocket-id:pocket-id:tag"}

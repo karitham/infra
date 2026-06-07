@@ -5,4 +5,8 @@ resources:
   - pvc.yaml
   - ingress.yaml
   - secret.yaml
+  - image-upgrader.yaml
 namespace: outline
+images:
+  - name: outlinewiki/outline
+    newTag: 1.8.0-1 # {"$imagepolicy": "outline:outline:tag"}

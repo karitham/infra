@@ -1,0 +1,18 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: attic
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`nix-cache.karitham.dev`)
+      services:
+        - name: attic
+          port: 80
+          serversTransport: long-upload
+  tls:
+    secretName: attic-tls

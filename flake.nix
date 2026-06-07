@@ -37,9 +37,6 @@
               [
                 kubectx
                 kubectl
-                kubernetes-helm
-                kubernetes-helmPlugins.helm-diff
-                helmfile
                 sops
                 fluxcd
                 age

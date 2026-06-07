@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: attic
+  labels:
+    app: attic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: attic
+  template:
+    metadata:
+      labels:
+        app: attic
+    spec:
+      containers:
+        - name: attic
+          image: ghcr.io/zhaofengli/attic:latest
+          args:
+            - --mode
+            - api-server
+            - -f
+            - /config/server.toml
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: ATTIC_SERVER_DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: attic-config
+                  key: ATTIC_SERVER_DATABASE_URL
+            - name: ATTIC_SERVER_TOKEN_RS256_SECRET_BASE64
+              valueFrom:
+                secretKeyRef:
+                  name: attic-config
+                  key: ATTIC_SERVER_TOKEN_RS256_SECRET_BASE64
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: true
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      volumes:
+        - name: config
+          secret:
+            secretName: attic-config
+            items:
+              - key: server.toml
+                path: server.toml

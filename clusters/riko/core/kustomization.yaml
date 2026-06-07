@@ -1,4 +1,3 @@
 resources:
   - cert-manager
   - cnpg
-  - csi-s3

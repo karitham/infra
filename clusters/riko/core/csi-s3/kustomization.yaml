@@ -1,4 +1,0 @@
-namespace: flux-system
-resources:
-  - release.yaml
-  - secret-manager.yaml

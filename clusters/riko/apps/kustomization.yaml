@@ -4,9 +4,7 @@ resources:
   - minecraft-geyser.yaml
   - minecraft.yaml
   - outline.yaml
-  - plex.yaml
   - pocket-id.yaml
   - radar.yaml
   - tailscale.yaml
-  - transmission.yaml
   - waifubot.yaml

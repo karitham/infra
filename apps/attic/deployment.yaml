@@ -36,6 +36,18 @@ spec:
                 secretKeyRef:
                   name: attic-config
                   key: ATTIC_SERVER_TOKEN_RS256_SECRET_BASE64
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: attic-config
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: attic-config
+                  key: AWS_SECRET_ACCESS_KEY
+            - name: AWS_REGION
+              value: "auto"
           volumeMounts:
             - name: config
               mountPath: /config

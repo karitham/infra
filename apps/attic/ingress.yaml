@@ -8,10 +8,10 @@ spec:
   ingressClassName: traefik
   tls:
     - hosts:
-        - nix-cache.0xf.fr
+        - nix-cache.karitham.dev
       secretName: attic-tls
   rules:
-    - host: nix-cache.0xf.fr
+    - host: nix-cache.karitham.dev
       http:
         paths:
           - path: /

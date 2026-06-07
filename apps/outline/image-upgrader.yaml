@@ -35,7 +35,7 @@ spec:
       author:
         email: fluxcdbot@users.noreply.github.com
         name: fluxcdbot
-      messageTemplate: "{{range .Changed.Changes}}{{print .OldValue}} -> {{println .NewValue}}{{end}}"
+      messageTemplate: "apps/outline: {{range .Changed.Changes}}{{print .OldValue}} -> {{println .NewValue}}{{end}}"
     push:
       branch: main
   update:

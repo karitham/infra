@@ -1,0 +1,12 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChartConfig
+metadata:
+  name: traefik
+  namespace: kube-system
+spec:
+  valuesContent: |-
+    additionalArguments:
+      # Bump readTimeout from 60s default to 600s so large attic (nix binary
+      # cache) uploads don't get a 504 Gateway Timeout while the client is
+      # still transmitting the request body.
+      - "--entryPoints.websecure.transport.respondingTimeouts.readTimeout=600s"

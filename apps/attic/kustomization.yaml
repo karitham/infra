@@ -4,6 +4,5 @@ resources:
   - deployment.yaml
   - service.yaml
   - certificate.yaml
-  - ingressRoute.yaml
-  - serversTransport.yaml
+  - ingress.yaml
 namespace: attic

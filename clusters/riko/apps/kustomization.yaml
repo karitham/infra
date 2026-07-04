@@ -1,6 +1,7 @@
 resources:
   - alloy
   - attic.yaml
+  - hermes.yaml
   - memos.yaml
   - minecraft-geyser.yaml
   - minecraft.yaml

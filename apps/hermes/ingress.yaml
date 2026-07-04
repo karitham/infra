@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hermes
+spec:
+  ingressClassName: tailscale
+  tls:
+    - hosts:
+        - hermes.${TSNET}
+      secretName: hermes-tls-secret
+  rules:
+    - host: hermes.${TSNET}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: hermes
+                port:
+                  number: 8787

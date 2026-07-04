@@ -1,0 +1,158 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hermes
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hermes
+  template:
+    metadata:
+      labels:
+        app: hermes
+    spec:
+      initContainers:
+        - name: agent-source
+          image: nousresearch/hermes-agent:latest
+          command:
+            - sh
+            - -c
+            - |
+              cp -r /opt/hermes/. /shared
+              chmod -R a+rX /shared
+          volumeMounts:
+            - name: agent-source
+              mountPath: /shared
+      containers:
+        - name: hermes-gateway
+          image: nousresearch/hermes-agent:latest
+          args: ["gateway", "run"]
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "2Gi"
+              cpu: "1"
+          env:
+            - name: HERMES_HOME
+              value: /opt/data
+            - name: API_SERVER_ENABLED
+              value: "true"
+            - name: API_SERVER_HOST
+              value: "0.0.0.0"
+            - name: API_SERVER_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: hermes
+                  key: API_SERVER_KEY
+            - name: HERMES_DASHBOARD
+              value: "1"
+            - name: HERMES_DASHBOARD_HOST
+              value: "127.0.0.1"
+            - name: HERMES_UID
+              value: "1000"
+            - name: HERMES_GID
+              value: "1000"
+          envFrom:
+            - secretRef:
+                name: hermes
+          ports:
+            - containerPort: 8642
+              name: api
+            - containerPort: 9119
+              name: dashboard
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8642
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8642
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          volumeMounts:
+            - name: hermes-home
+              mountPath: /opt/data
+        - name: hermes
+          image: ghcr.io/nesquena/hermes-webui:latest
+          resources:
+            requests:
+              memory: "2Gi"
+              cpu: "500m"
+            limits:
+              memory: "8Gi"
+              cpu: "4"
+          env:
+            - name: HERMES_WEBUI_HOST
+              value: 0.0.0.0
+            - name: HERMES_WEBUI_PORT
+              value: "8787"
+            - name: HERMES_WEBUI_STATE_DIR
+              value: /home/hermeswebui/.hermes/webui
+            - name: HERMES_WEBUI_ONBOARDING_OPEN
+              value: "1"
+            - name: HERMES_WEBUI_AGENT_DIR
+              value: /home/hermeswebui/.hermes/hermes-agent
+            - name: WANTED_UID
+              value: "1000"
+            - name: WANTED_GID
+              value: "1000"
+          envFrom:
+            - secretRef:
+                name: hermes
+          ports:
+            - containerPort: 8787
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8787
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8787
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          volumeMounts:
+            - name: hermes-home
+              mountPath: /home/hermeswebui/.hermes
+            - name: agent-source
+              mountPath: /home/hermeswebui/.hermes/hermes-agent
+            - name: workspace
+              mountPath: /workspace
+      volumes:
+        - name: hermes-home
+          persistentVolumeClaim:
+            claimName: hermes-home
+        - name: agent-source
+          emptyDir: {}
+        - name: workspace
+          persistentVolumeClaim:
+            claimName: hermes-workspace
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hermes
+spec:
+  selector:
+    app: hermes
+  ports:
+    - name: webui
+      protocol: TCP
+      port: 8787
+      targetPort: 8787
+    - name: api
+      protocol: TCP
+      port: 8642
+      targetPort: 8642
+    - name: dashboard
+      protocol: TCP
+      port: 9119
+      targetPort: 9119

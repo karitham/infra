@@ -17,7 +17,9 @@ spec:
     spec:
       containers:
         - name: mc-survivor
-          image: itzg/minecraft-server:java21
+          # 2026.8.0+ bundles a CurseForge API key; java21 required
+          # (NeoForge 21.1.145 cannot parse Java 25 class files).
+          image: itzg/minecraft-server:2026.8.0-java21
           env:
             - name: EULA
               value: "TRUE"
@@ -27,6 +29,11 @@ spec:
               value: https://www.curseforge.com/minecraft/modpacks/lucky-world-invasion-survivor
             - name: CF_FILE_ID
               value: "6407642"
+            # Client-only mods not tagged as such on CurseForge:
+            # 1219053 = Particular (client mixin crashes dedicated server)
+            # 423254  = CullLeaves (same)
+            - name: CF_EXCLUDE_MODS
+              value: "1219053,423254"
             - name: MC_PORT
               value: "25565"
             - name: INIT_MEMORY

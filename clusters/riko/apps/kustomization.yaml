@@ -4,6 +4,7 @@ resources:
   - hermes.yaml
   - memos.yaml
   - minecraft-geyser.yaml
+  - minecraft-survivor.yaml
   - minecraft.yaml
   - outline.yaml
   - pocket-id.yaml

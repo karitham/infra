@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: mc-survivor
+  name: mc-survivor
+spec:
+  replicas: 1
+  serviceName: mc-survivor
+  selector:
+    matchLabels:
+      app: mc-survivor
+  template:
+    metadata:
+      labels:
+        app: mc-survivor
+    spec:
+      containers:
+        - name: mc-survivor
+          image: itzg/minecraft-server:java21
+          env:
+            - name: EULA
+              value: "TRUE"
+            - name: TYPE
+              value: AUTO_CURSEFORGE
+            - name: CF_PAGE_URL
+              value: https://www.curseforge.com/minecraft/modpacks/lucky-world-invasion-survivor
+            - name: CF_FILE_ID
+              value: "6407642"
+            - name: MC_PORT
+              value: "25565"
+            - name: INIT_MEMORY
+              value: 2G
+            - name: MAX_MEMORY
+              value: 6G
+          volumeMounts:
+            - mountPath: /data
+              name: data
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi

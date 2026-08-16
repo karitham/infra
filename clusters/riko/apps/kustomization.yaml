@@ -3,7 +3,6 @@ resources:
   - attic.yaml
   - hermes.yaml
   - memos.yaml
-  - minecraft-geyser.yaml
   - minecraft-survivor.yaml
   - minecraft.yaml
   - outline.yaml

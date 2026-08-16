@@ -8,7 +8,7 @@ spec:
   ports:
     - port: 25565
       targetPort: 25565
-      nodePort: 30567
+      nodePort: 30566
   selector:
     app: mc-survivor
   type: NodePort

@@ -18,7 +18,7 @@ spec:
       containers:
         - name: mc-survivor
           # 2026.8.0+ bundles a CurseForge API key; java21 required
-          # (NeoForge 21.1.145 cannot parse Java 25 class files).
+          # (NeoForge/Forge installers here cannot parse newer class files).
           image: itzg/minecraft-server:2026.8.0-java21
           env:
             - name: EULA
@@ -26,14 +26,13 @@ spec:
             - name: TYPE
               value: AUTO_CURSEFORGE
             - name: CF_PAGE_URL
-              value: https://www.curseforge.com/minecraft/modpacks/lucky-world-invasion-survivor
+              value: https://www.curseforge.com/minecraft/modpacks/lucky-world-invasion-reloaded
             - name: CF_FILE_ID
-              value: "6407642"
-            # Client-only mods not tagged as such on CurseForge:
-            # 1219053 = Particular (client mixin crashes dedicated server)
-            # 423254  = CullLeaves (same)
-            - name: CF_EXCLUDE_MODS
-              value: "1219053,423254"
+              value: "8581079"
+            # Lucky World Invasion Reloaded, MC 1.20.1 / Forge 47.4.20.
+            # Boot-verified without extra excludes; if a future pack version
+            # adds mis-tagged client mods, add their project IDs to
+            # CF_EXCLUDE_MODS and delete the stale jars from /data/mods.
             - name: MC_PORT
               value: "25565"
             - name: INIT_MEMORY

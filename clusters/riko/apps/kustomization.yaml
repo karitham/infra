@@ -7,6 +7,5 @@ resources:
   - minecraft.yaml
   - outline.yaml
   - pocket-id.yaml
-  - radar.yaml
   - tailscale.yaml
   - waifubot.yaml

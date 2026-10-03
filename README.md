@@ -33,7 +33,6 @@ Each app in `apps/` is referenced by a Flux Kustomization in `clusters/riko/apps
 | [Outline](https://github.com/outline/outline)                       | Wiki/knowledge base        | `outline.dolly-ruffe.ts.net` |
 | [Memos](https://github.com/usememos/memos)                          | Note-taking (auto-updates) | `memo.dolly-ruffe.ts.net`    |
 | [Pocket ID](https://github.com/pocket-id/pocket-id)                 | OIDC provider              | `id.dolly-ruffe.ts.net`      |
-| [Radar](https://github.com/skyhook-io/radar)                        | K8s observability          | `k8s.dolly-ruffe.ts.net`     |
 | [Minecraft](https://github.com/itzg/docker-minecraft-server)        | Java server                | NodePort 30565               |
 | [Minecraft Geyser](https://github.com/itzg/docker-minecraft-server) | Java + Bedrock server      | —                            |
 | [Alloy](https://github.com/grafana/alloy)                           | Observability collector    | —                            |

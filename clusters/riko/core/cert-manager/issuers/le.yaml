@@ -19,4 +19,4 @@ spec:
             - "0xf.fr"
       - http01:
           ingress:
-            class: traefik
+            ingressClassName: traefik

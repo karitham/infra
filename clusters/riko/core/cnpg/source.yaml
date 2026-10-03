@@ -7,7 +7,7 @@ spec:
   interval: 30m
   url: https://github.com/cloudnative-pg/cloudnative-pg
   ref:
-    tag: v1.26.0
+    tag: v1.27.4
   ignore: |
     /*
-    !/releases/cnpg-1.26.0.yaml
+    !/releases/cnpg-1.27.4.yaml

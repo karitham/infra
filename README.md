@@ -7,8 +7,8 @@ Kubernetes infrastructure-as-code for a single cluster (**riko**), managed with 
 ```mermaid
 graph LR
     GIT[karitham/infra] -->|SSH| FLUX[FluxCD]
-    FLUX --> CORE[Core: cert-manager, CNPG]
-    FLUX --> APPS[Apps: 9 services]
+    FLUX --> CORE[Core: cert-manager, CNPG, barman-plugin, Traefik]
+    FLUX --> APPS[Apps]
     TS[Tailscale] -->|Ingress| APPS
 ```
 
@@ -19,12 +19,18 @@ Flux polls GitHub every minute, reconciles Kustomizations every 10 minutes. All 
 ```
 apps/              # Reusable app manifests (source of truth)
 clusters/riko/     # Cluster-specific wiring
-  core/            # Infrastructure (cert-manager, cnpg)
+  core/            # Infrastructure (cert-manager, cnpg, barman-plugin, traefik)
   apps/            # Flux Kustomizations pointing at apps/
   flux-system/     # Flux bootstrap
+docs/              # Operational documentation (see docs/README.md)
 ```
 
 Each app in `apps/` is referenced by a Flux Kustomization in `clusters/riko/apps/`. This separation lets the same app definitions be reused across clusters.
+
+## Documentation
+
+Operational guides live in [`docs/`](docs/README.md): cluster operations, PostgreSQL
+upgrades, database recovery, and backup topology.
 
 ## Deployed Services
 
@@ -73,7 +79,8 @@ All web apps use `ingressClassName: tailscale` with host `<name>.${TSNET}`. Tail
 - [CNPG](https://github.com/cloudnative-pg/cloudnative-pg) (v1.30.1) — PostgreSQL operator, used by Outline and Waifubot
 - [Barman Cloud plugin](https://cloudnative-pg.github.io/plugin-barman-cloud/) (chart 0.8.1) — CNPG-I backup plugin; replaces the native `barmanObjectStore` (removed in CNPG 1.31)
 
-Backup and disaster recovery (restore, PITR, local dumps) is documented in [docs/waifubot-db-recovery.md](docs/waifubot-db-recovery.md).
+Backup and disaster recovery (restore, PITR, local dumps) is documented in
+[docs/waifubot-db-recovery.md](docs/waifubot-db-recovery.md).
 
 ## CI
 

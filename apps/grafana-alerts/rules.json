@@ -1,0 +1,167 @@
+[
+  {
+    "uid": "riko-backup-stale",
+    "title": "PostgreSQL backup is stale",
+    "ruleGroup": "riko-backups",
+    "folderUID": "riko",
+    "orgId": 1,
+    "condition": "B",
+    "for": "30m",
+    "noDataState": "Alerting",
+    "execErrState": "Alerting",
+    "labels": { "severity": "critical" },
+    "annotations": {
+      "summary": "No successful PostgreSQL base backup in the last 27h",
+      "description": "The newest successful base backup is older than 27h."
+    },
+    "data": [
+      {
+        "refId": "A",
+        "queryType": "",
+        "relativeTimeRange": { "from": 3600, "to": 0 },
+        "datasourceUid": "grafanacloud-prom",
+        "model": {
+          "expr": "time() - barman_cloud_cloudnative_pg_io_last_available_backup_timestamp",
+          "instant": true,
+          "range": false,
+          "intervalMs": 1000,
+          "maxDataPoints": 43200,
+          "refId": "A"
+        }
+      },
+      {
+        "refId": "B",
+        "queryType": "",
+        "relativeTimeRange": { "from": 0, "to": 0 },
+        "datasourceUid": "__expr__",
+        "model": {
+          "conditions": [
+            {
+              "evaluator": { "params": [97200], "type": "gt" },
+              "operator": { "type": "and" },
+              "query": { "params": ["A"] },
+              "reducer": { "params": [], "type": "last" },
+              "type": "query"
+            }
+          ],
+          "datasource": { "type": "__expr__", "uid": "__expr__" },
+          "hide": false,
+          "intervalMs": 1000,
+          "maxDataPoints": 43200,
+          "refId": "B",
+          "type": "classic_conditions"
+        }
+      }
+    ]
+  },
+  {
+    "uid": "riko-backup-failing",
+    "title": "PostgreSQL backup is failing",
+    "ruleGroup": "riko-backups",
+    "folderUID": "riko",
+    "orgId": 1,
+    "condition": "B",
+    "for": "15m",
+    "noDataState": "OK",
+    "execErrState": "Alerting",
+    "labels": { "severity": "critical" },
+    "annotations": {
+      "summary": "PostgreSQL backup failing",
+      "description": "The most recent backup failure is newer than the most recent success."
+    },
+    "data": [
+      {
+        "refId": "A",
+        "queryType": "",
+        "relativeTimeRange": { "from": 21600, "to": 0 },
+        "datasourceUid": "grafanacloud-prom",
+        "model": {
+          "expr": "barman_cloud_cloudnative_pg_io_last_failed_backup_timestamp - barman_cloud_cloudnative_pg_io_last_available_backup_timestamp",
+          "instant": true,
+          "range": false,
+          "intervalMs": 1000,
+          "maxDataPoints": 43200,
+          "refId": "A"
+        }
+      },
+      {
+        "refId": "B",
+        "queryType": "",
+        "relativeTimeRange": { "from": 0, "to": 0 },
+        "datasourceUid": "__expr__",
+        "model": {
+          "conditions": [
+            {
+              "evaluator": { "params": [0], "type": "gt" },
+              "operator": { "type": "and" },
+              "query": { "params": ["A"] },
+              "reducer": { "params": [], "type": "last" },
+              "type": "query"
+            }
+          ],
+          "datasource": { "type": "__expr__", "uid": "__expr__" },
+          "hide": false,
+          "intervalMs": 1000,
+          "maxDataPoints": 43200,
+          "refId": "B",
+          "type": "classic_conditions"
+        }
+      }
+    ]
+  },
+  {
+    "uid": "riko-pg-down",
+    "title": "PostgreSQL instance is down",
+    "ruleGroup": "riko-backups",
+    "folderUID": "riko",
+    "orgId": 1,
+    "condition": "B",
+    "for": "5m",
+    "noDataState": "Alerting",
+    "execErrState": "Alerting",
+    "labels": { "severity": "critical" },
+    "annotations": {
+      "summary": "CloudNativePG instance is down",
+      "description": "cnpg_collector_up reports the instance as unreachable."
+    },
+    "data": [
+      {
+        "refId": "A",
+        "queryType": "",
+        "relativeTimeRange": { "from": 600, "to": 0 },
+        "datasourceUid": "grafanacloud-prom",
+        "model": {
+          "expr": "cnpg_collector_up",
+          "instant": true,
+          "range": false,
+          "intervalMs": 1000,
+          "maxDataPoints": 43200,
+          "refId": "A"
+        }
+      },
+      {
+        "refId": "B",
+        "queryType": "",
+        "relativeTimeRange": { "from": 0, "to": 0 },
+        "datasourceUid": "__expr__",
+        "model": {
+          "conditions": [
+            {
+              "evaluator": { "params": [1], "type": "lt" },
+              "operator": { "type": "and" },
+              "query": { "params": ["A"] },
+              "reducer": { "params": [], "type": "last" },
+              "type": "query"
+            }
+          ],
+          "datasource": { "type": "__expr__", "uid": "__expr__" },
+          "hide": false,
+          "intervalMs": 1000,
+          "maxDataPoints": 43200,
+          "refId": "B",
+          "type": "classic_conditions"
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,16 @@
+configMapGenerator:
+  - name: grafana-alerts-rules
+    files:
+      - rules.json
+  - name: grafana-alerts-script
+    files:
+      - provision.py
+# The Job references the ConfigMaps by name and a Job pod template is
+# immutable, so a content-hash name suffix would break the reference on the
+# next rules edit.
+generatorOptions:
+  disableNameSuffixHash: true
+resources:
+  - ns.yaml
+  - secret.yaml
+  - provision.yaml

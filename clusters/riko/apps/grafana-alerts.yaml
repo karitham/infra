@@ -1,0 +1,17 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: grafana-alerts
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  targetNamespace: grafana-alerts
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./apps/grafana-alerts
+  prune: true
+  # Wait for the Job so a failed provisioning run shows up as a NotReady
+  # Kustomization.
+  wait: true
+  timeout: 3m

@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: grafana-alerts-provision
+spec:
+  backoffLimit: 2
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: provision
+          image: python:3.12-alpine
+          command: ["python", "/script/provision.py"]
+          env:
+            - name: GRAFANA_URL
+              value: https://karitham.grafana.net
+            - name: GRAFANA_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-alerts
+                  key: token
+          volumeMounts:
+            - name: rules
+              mountPath: /config
+            - name: script
+              mountPath: /script
+      volumes:
+        - name: rules
+          configMap:
+            name: grafana-alerts-rules
+        - name: script
+          configMap:
+            name: grafana-alerts-script

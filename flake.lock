@@ -2,12 +2,12 @@
   "nodes": {
     "nixpkgs": {
       "locked": {
-        "lastModified": 1782959384,
-        "narHash": "sha256-xnJJk+ct+D2+wdRxj1wk36w5zV9RVESwRqcklPdt3fM=",
-        "rev": "65179426c83bb3f6bc14898b42ea1c6f01d374b0",
-        "revCount": 1026231,
+        "lastModified": 1790822859,
+        "narHash": "sha256-69xHQhAeMAD2wDXO7T2pcOZIF9Sga2W+JkmY2a11Ops=",
+        "rev": "c59305bab2065cfecc4944690d9eedbb56f3a9fa",
+        "revCount": 1083223,
         "type": "tarball",
-        "url": "https://api.flakehub.com/f/pinned/NixOS/nixpkgs/0.1.1026231%2Brev-65179426c83bb3f6bc14898b42ea1c6f01d374b0/019f2a76-be35-7283-99c4-f0cb9240e9a4/source.tar.gz?rev=65179426c83bb3f6bc14898b42ea1c6f01d374b0&revCount=1026231"
+        "url": "https://api.flakehub.com/f/pinned/NixOS/nixpkgs/0.1.1083223%2Brev-c59305bab2065cfecc4944690d9eedbb56f3a9fa/01a0f7ef-16af-76d0-a080-65d8f4749119/source.tar.gz?rev=c59305bab2065cfecc4944690d9eedbb56f3a9fa&revCount=1083223"
       },
       "original": {
         "type": "tarball",
@@ -41,11 +41,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1780220602,
-        "narHash": "sha256-eynAfOmbmxJnkp7YewvCEbShNnnYJ9gLLqkzsYtBPeM=",
+        "lastModified": 1786901030,
+        "narHash": "sha256-WSFCsDSE5ffgD2MqzkM2CYjeFiKhRF/dJUN8uedb6YE=",
         "owner": "numtide",
         "repo": "treefmt-nix",
-        "rev": "db947814a175b7ca6ded66e21383d938df01c227",
+        "rev": "27b3b12a8e6375f28ebe122f07d230ca5459bbfa",
         "type": "github"
       },
       "original": {

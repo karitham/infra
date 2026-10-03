@@ -8,6 +8,10 @@ spec:
   secretRef:
     name: flux-webhook-token
   resources:
+    - apiVersion: kustomize.toolkit.fluxcd.io/v1
+      kind: Kustomization
+      name: flux-system
+      namespace: flux-system
     - apiVersion: image.toolkit.fluxcd.io/v1
       kind: ImageRepository
       name: waifubot

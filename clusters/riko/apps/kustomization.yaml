@@ -5,6 +5,7 @@ resources:
   - memos.yaml
   # - minecraft-survivor.yaml
   - minecraft.yaml
+  - opencode.yaml
   - outline.yaml
   - pocket-id.yaml
   - tailscale.yaml

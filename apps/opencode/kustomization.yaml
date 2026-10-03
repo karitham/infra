@@ -1,0 +1,22 @@
+resources:
+  - ns.yaml
+  - secret.yaml
+  - pvc.yaml
+  - deployment.yaml
+  - ingress.yaml
+  - image-upgrader.yaml
+configMapGenerator:
+  - name: opencode-scripts
+    files:
+      - provision.sh
+      - caddy-entrypoint.sh
+      - health.sh
+      - Caddyfile
+# The scripts contain shell and Caddy $variables that Flux post-build
+# substitution must not rewrite.
+generatorOptions:
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+images:
+  - name: ghcr.io/anomalyco/opencode
+    newTag: 2.0.22 # {"$imagepolicy": "opencode:opencode:tag"}

@@ -1,0 +1,173 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opencode
+spec:
+  replicas: 1
+  # The SQLite database is stored on a ReadWriteOnce PVC; do not run two
+  # servers against it during a rollout.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: opencode
+  template:
+    metadata:
+      labels:
+        app: opencode
+    spec:
+      automountServiceAccountToken: false
+      initContainers:
+        - name: provision
+          image: ghcr.io/anomalyco/opencode:2.0.22
+          command:
+            - /bin/sh
+            - /etc/opencode/provision.sh
+          env:
+            # Keep in lockstep with the opencode container below; Kubernetes
+            # has no shared env between containers.
+            - name: HOME
+              value: /root
+            - name: USER
+              value: root
+            - name: PATH
+              value: /root/.nix-profile/bin:/nix/var/nix/profiles/default/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+            - name: SSL_CERT_FILE
+              value: /etc/ssl/certs/ca-certificates.crt
+            - name: GIT_SSL_CAINFO
+              value: /etc/ssl/certs/ca-certificates.crt
+            - name: NIX_SSL_CERT_FILE
+              value: /etc/ssl/certs/ca-certificates.crt
+          volumeMounts:
+            - name: home
+              mountPath: /root
+            - name: nix
+              mountPath: /nix
+            - name: scripts
+              mountPath: /etc/opencode
+      containers:
+        - name: opencode
+          image: ghcr.io/anomalyco/opencode:2.0.22
+          # Bind loopback only; the auth-proxy sidecar is the pod's front door.
+          args:
+            - serve
+            - --hostname
+            - 127.0.0.1
+            - --port
+            - "4097"
+          env:
+            - name: HOME
+              value: /root
+            - name: USER
+              value: root
+            - name: PATH
+              value: /root/.nix-profile/bin:/nix/var/nix/profiles/default/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+            - name: SSL_CERT_FILE
+              value: /etc/ssl/certs/ca-certificates.crt
+            - name: GIT_SSL_CAINFO
+              value: /etc/ssl/certs/ca-certificates.crt
+            - name: NIX_SSL_CERT_FILE
+              value: /etc/ssl/certs/ca-certificates.crt
+            - name: OPENCODE_SERVER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: opencode-server
+                  key: password
+          ports:
+            - name: internal
+              containerPort: 4097
+          startupProbe:
+            exec:
+              command:
+                - /bin/sh
+                - /etc/opencode/health.sh
+            periodSeconds: 5
+            failureThreshold: 60
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - /etc/opencode/health.sh
+            periodSeconds: 30
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 250m
+            limits:
+              memory: 4Gi
+              cpu: 2
+          volumeMounts:
+            - name: home
+              mountPath: /root
+            - name: nix
+              mountPath: /nix
+            - name: workspace
+              mountPath: /workspace
+            - name: scripts
+              mountPath: /etc/opencode
+        - name: auth-proxy
+          # Not covered by image automation; bump manually.
+          image: caddy:2.11.6-alpine
+          command:
+            - /bin/sh
+            - /etc/opencode/caddy-entrypoint.sh
+          env:
+            - name: OPENCODE_SERVER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: opencode-server
+                  key: password
+          ports:
+            - name: http
+              containerPort: 4096
+          startupProbe:
+            httpGet:
+              path: /api/info
+              port: http
+            periodSeconds: 5
+            failureThreshold: 60
+          readinessProbe:
+            httpGet:
+              path: /api/info
+              port: http
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 30
+          resources:
+            requests:
+              memory: 16Mi
+              cpu: 10m
+            limits:
+              memory: 64Mi
+              cpu: 100m
+          volumeMounts:
+            - name: scripts
+              mountPath: /etc/opencode
+      volumes:
+        - name: home
+          persistentVolumeClaim:
+            claimName: opencode-home
+        - name: nix
+          persistentVolumeClaim:
+            claimName: opencode-nix
+        - name: workspace
+          persistentVolumeClaim:
+            claimName: opencode-workspace
+        - name: scripts
+          configMap:
+            name: opencode-scripts
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: opencode
+spec:
+  selector:
+    app: opencode
+  ports:
+    - name: http
+      protocol: TCP
+      port: 4096
+      targetPort: 4096

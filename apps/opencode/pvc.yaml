@@ -1,0 +1,36 @@
+# Volumes:
+#   opencode-home      - opencode database, auth, config (authoritative)
+#   opencode-nix       - nix store; rebuildable, safe to delete
+#   opencode-workspace - user projects (authoritative)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: opencode-home
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: opencode-nix
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: opencode-workspace
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi

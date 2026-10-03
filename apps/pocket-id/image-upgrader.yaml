@@ -1,4 +1,4 @@
-apiVersion: image.toolkit.fluxcd.io/v1beta2
+apiVersion: image.toolkit.fluxcd.io/v1
 kind: ImageRepository
 metadata:
   name: pocket-id
@@ -6,7 +6,7 @@ spec:
   image: ghcr.io/pocket-id/pocket-id
   interval: 15m0s
 ---
-apiVersion: image.toolkit.fluxcd.io/v1beta2
+apiVersion: image.toolkit.fluxcd.io/v1
 kind: ImagePolicy
 metadata:
   name: pocket-id
@@ -17,7 +17,7 @@ spec:
     semver:
       range: 2.x.x
 ---
-apiVersion: image.toolkit.fluxcd.io/v1beta2
+apiVersion: image.toolkit.fluxcd.io/v1
 kind: ImageUpdateAutomation
 metadata:
   name: pocket-id

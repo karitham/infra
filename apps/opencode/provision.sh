@@ -1,8 +1,9 @@
 #!/bin/sh
 set -eu
 
-mkdir -p /etc/nix
-cat > /etc/nix/nix.conf <<'EOF'
+# InitContainer /etc is discarded on exit; /root is the PVC shared with the app container.
+mkdir -p /root/.config/nix
+cat > /root/.config/nix/nix.conf <<'EOF'
 experimental-features = nix-command flakes
 sandbox = false
 build-users-group =

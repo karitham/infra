@@ -6,6 +6,7 @@ Operational documentation for the riko cluster.
 | -------------------------------------------------- | --------------------------------------------------------------------- |
 | [operations.md](operations.md)                     | how to work on the cluster: GitOps flow, making a change, conventions |
 | [monitoring.md](monitoring.md)                     | metrics/logs pipeline, alert rules, Discord routing                   |
+| [os-upgrades.md](os-upgrades.md)                   | Ubuntu LTS upgrade procedure for the k3s host                         |
 | [postgres-upgrades.md](postgres-upgrades.md)       | PostgreSQL minor/major upgrade procedure                              |
 | [waifubot-db-recovery.md](waifubot-db-recovery.md) | database restore and point-in-time recovery runbook                   |
 | [backup-topology.md](backup-topology.md)           | which databases are backed up, where, and retention                   |

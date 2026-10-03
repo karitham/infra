@@ -75,9 +75,11 @@ nested Flux Kustomization with `wait: true`.
 
 ## Cluster facts
 
-- Single node `k1`, k3s on Ubuntu 22.04 (Oracle ARM64), SQLite datastore.
+- Single node `k1`, k3s on Ubuntu 26.04 (Oracle ARM64), SQLite datastore.
 - k3s upgrades: official `get.k3s.io` installer with `INSTALL_K3S_VERSION`
   pinned; back up `state.db` + `server/token` first.
+- OS release upgrades: LTS to LTS, one hop per session, cluster verified
+  between hops. See [os-upgrades.md](os-upgrades.md).
 - Postgres: CNPG, all clusters on PostgreSQL 18. See
   [backup-topology.md](backup-topology.md) and
   [postgres-upgrades.md](postgres-upgrades.md).

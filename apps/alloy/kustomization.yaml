@@ -1,2 +1,13 @@
+configMapGenerator:
+  - name: alloy-config
+    namespace: alloy
+    files:
+      - config.alloy
+# The Helm release references the ConfigMap by name and the Alloy pods mount it
+# by name, so a content-hash name suffix would break the reference on the next
+# config edit.
+generatorOptions:
+  disableNameSuffixHash: true
 resources:
   - release.yaml
+  - secret.yaml

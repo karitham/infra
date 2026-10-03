@@ -1,4 +1,5 @@
 kubeconfig.yaml
 .direnv
 .decrypted*
+data-alloy
 result

@@ -14,3 +14,23 @@ spec:
   targetNamespace: cnpg-system
   wait: true
   timeout: 5m
+  patches:
+    # The Alloy pod scrape selects pods by prometheus.io/scrape annotation.
+    # Annotate the operator here so its controller-runtime metrics on port
+    # 8080 stay scraped.
+    - patch: |-
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: cnpg-controller-manager
+        spec:
+          template:
+            metadata:
+              annotations:
+                prometheus.io/scrape: "true"
+                prometheus.io/port: "8080"
+      target:
+        group: apps
+        version: v1
+        kind: Deployment
+        name: cnpg-controller-manager

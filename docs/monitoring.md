@@ -9,7 +9,8 @@ Metrics and logs are shipped by Grafana Alloy (`apps/alloy/`) to Grafana Cloud. 
 - Metrics go to Grafana Cloud Prometheus via `prometheus.remote_write`.
 - Logs go to Grafana Cloud Loki via `loki.write`.
 - Traces go to Tempo via `otelcol.exporter.otlp`.
-- CNPG instance metrics on pod port `9187` are scraped by the `discovery.kubernetes.cnpg` / `prometheus.scrape.cnpg` components.
+- Pod and Service scrapes select targets by `prometheus.io/scrape` annotations, so a workload is scraped only after its pods carry them. CNPG instance metrics on pod port `9187` are the exception: the pods carry no annotations, so `discovery.kubernetes.cnpg` / `prometheus.scrape.cnpg` discovers them explicitly.
+- The Alloy configuration is `apps/alloy/config.alloy`; kustomize generates it into the `alloy-config` ConfigMap, which the Helm release mounts.
 
 Alert rules are evaluated by Grafana-managed alerting on the stack. The rules live in this repo, and a Flux Job pushes them to the Grafana API:
 
@@ -78,16 +79,17 @@ curl -s -X PUT -H "Authorization: Bearer $GT" -H "Content-Type: application/json
 
 Two Grafana Cloud credentials are in play:
 
-- Alloy's write token, in the SOPS-encrypted `clusters/riko/apps/alloy/secret/values.yaml`. It is scoped for pushing metrics and logs; it cannot query or provision.
+- Alloy's write token, in the SOPS-encrypted `apps/alloy/secret.yaml` as `GRAFANA_CLOUD_TOKEN`. The chart injects it into the Alloy pods as an environment variable, and `apps/alloy/config.alloy` reads it with `env("GRAFANA_CLOUD_TOKEN")`. It is scoped for pushing metrics and logs; it cannot query or provision.
 - The `glsa_` service-account token, in the SOPS-encrypted `apps/grafana-alerts/secret.yaml`. It authorizes the Grafana API for alerting and folders, and the provisioning Job uses it.
 
 Rotate the service-account token by editing the encrypted file in place:
 
 ```bash
 sops apps/grafana-alerts/secret.yaml
+sops apps/alloy/secret.yaml   # Alloy write token; restart the pods afterwards
 ```
 
-SOPS decrypts to a temporary file, opens it in `$EDITOR`, and re-encrypts on save. The file's embedded SOPS metadata supplies the recipients, so the command works from any directory.
+SOPS decrypts to a temporary file, opens it in `$EDITOR`, and re-encrypts on save. The file's embedded SOPS metadata supplies the recipients, so the command works from any directory. The Alloy pods read the token as an environment variable at startup, so roll them after rotating: `kubectl rollout restart daemonset -n alloy -l app.kubernetes.io/name=alloy`.
 
 ## Known quirks
 

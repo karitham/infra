@@ -1,0 +1,20 @@
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: waifubot-pg
+spec:
+  retentionPolicy: "10d"
+  configuration:
+    destinationPath: s3://waifubot-cnpg/backups/
+    endpointURL: https://687faca4f6d521095ce1c97d10e53ded.r2.cloudflarestorage.com
+    s3Credentials:
+      accessKeyId:
+        name: pg-backup-s3
+        key: accessKeyId
+      secretAccessKey:
+        name: pg-backup-s3
+        key: secretAccessKey
+    wal:
+      compression: gzip
+    data:
+      compression: gzip

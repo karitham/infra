@@ -1,5 +1,6 @@
 resources:
   - secret.yaml
   - waifubot.yaml
+  - objectstore.yaml
   - pg.yaml
   - ingress.yaml

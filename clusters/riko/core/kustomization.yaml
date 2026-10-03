@@ -1,4 +1,5 @@
 resources:
   - cert-manager
   - cnpg
+  - barman-plugin
   - traefik

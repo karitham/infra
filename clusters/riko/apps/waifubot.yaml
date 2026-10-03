@@ -6,6 +6,10 @@ metadata:
 spec:
   interval: 10m0s
   targetNamespace: waifubot
+  # The ObjectStore (barmancloud.cnpg.io) needs the Barman Cloud plugin's CRD,
+  # which the barman-plugin Kustomization installs and waits for first.
+  dependsOn:
+    - name: barman-plugin
   sourceRef:
     kind: GitRepository
     name: flux-system

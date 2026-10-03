@@ -1,0 +1,2 @@
+resources:
+  - kustomization-barman-plugin.yaml

@@ -4,7 +4,7 @@ metadata:
   name: waifubot-pg
 spec:
   instances: 1
-  imageName: ghcr.io/cloudnative-pg/postgresql:17.11
+  imageName: ghcr.io/cloudnative-pg/postgresql:18.4
   resources:
     requests:
       memory: 512Mi
@@ -28,6 +28,7 @@ spec:
     isWALArchiver: true
     parameters:
       barmanObjectName: waifubot-pg
+      serverName: waifubot-pg18
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: ScheduledBackup

@@ -71,6 +71,9 @@ All web apps use `ingressClassName: tailscale` with host `<name>.${TSNET}`. Tail
 
 - [cert-manager](https://github.com/cert-manager/cert-manager) (v1.21.2) — Let's Encrypt certs, Cloudflare DNS01 for `0xf.fr`
 - [CNPG](https://github.com/cloudnative-pg/cloudnative-pg) (v1.30.1) — PostgreSQL operator, used by Outline and Waifubot
+- [Barman Cloud plugin](https://cloudnative-pg.github.io/plugin-barman-cloud/) (chart 0.8.1) — CNPG-I backup plugin; replaces the native `barmanObjectStore` (removed in CNPG 1.31)
+
+Backup and disaster recovery (restore, PITR, local dumps) is documented in [docs/waifubot-db-recovery.md](docs/waifubot-db-recovery.md).
 
 ## CI
 

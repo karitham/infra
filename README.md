@@ -38,6 +38,7 @@ upgrades, database recovery, and backup topology.
 | ------------------------------------------------------------------- | -------------------------- | ---------------------------- |
 | [Outline](https://github.com/outline/outline)                       | Wiki/knowledge base        | `outline.dolly-ruffe.ts.net` |
 | [Memos](https://github.com/usememos/memos)                          | Note-taking (auto-updates) | `memo.dolly-ruffe.ts.net`    |
+| [OpenCode](https://github.com/anomalyco/opencode)                   | AI coding agent            | `oc.dolly-ruffe.ts.net`      |
 | [Pocket ID](https://github.com/pocket-id/pocket-id)                 | OIDC provider              | `id.dolly-ruffe.ts.net`      |
 | [Minecraft](https://github.com/itzg/docker-minecraft-server)        | Java server                | NodePort 30565               |
 | [Minecraft Geyser](https://github.com/itzg/docker-minecraft-server) | Java + Bedrock server      | —                            |

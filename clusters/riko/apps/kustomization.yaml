@@ -2,7 +2,6 @@ resources:
   - alloy
   - attic.yaml
   - grafana-alerts.yaml
-  - hermes.yaml
   - memos.yaml
   # - minecraft-survivor.yaml
   - minecraft.yaml

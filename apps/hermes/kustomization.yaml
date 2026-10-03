@@ -1,6 +1,0 @@
-resources:
-  - deployment.yaml
-  - ingress.yaml
-  - pvc.yaml
-  - secret.yaml
-namespace: hermes

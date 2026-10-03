@@ -4,7 +4,7 @@ metadata:
   name: waifubot
 spec:
   image: ghcr.io/karitham/waifubot
-  interval: 5m0s
+  interval: 15m0s
 ---
 apiVersion: image.toolkit.fluxcd.io/v1
 kind: ImagePolicy

@@ -4,6 +4,7 @@ metadata:
   name: outline-pg
 spec:
   instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.11
   storage:
     size: 5Gi
     storageClass: local-path

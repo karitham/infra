@@ -11,6 +11,16 @@ patches:
           provider: sops
           secretRef:
             name: sops-age
+    target:
+      kind: Kustomization
+      group: kustomize.toolkit.fluxcd.io
+      version: v1
+  - patch: |-
+      apiVersion: kustomize.toolkit.fluxcd.io/v1
+      kind: Kustomization
+      metadata:
+        name: patch-kustomization
+      spec:
         postBuild:
           substitute:
             TSNET: dolly-ruffe.ts.net
@@ -18,6 +28,7 @@ patches:
       kind: Kustomization
       group: kustomize.toolkit.fluxcd.io
       version: v1
+      name: "^(hermes|memos|outline|pocket-id|radar)$"
 resources:
   - flux-system
   - core

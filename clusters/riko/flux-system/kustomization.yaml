@@ -6,3 +6,4 @@ resources:
   - webhook-receiver.yaml
   - webhook-secret.yaml
   - webhook-ingress.yaml
+  - acme-solver-networkpolicy.yaml

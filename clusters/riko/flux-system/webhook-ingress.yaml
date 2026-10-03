@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: flux-webhook
+  namespace: flux-system
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - flux-webhook.karitham.dev
+      secretName: flux-webhook-tls
+  rules:
+    - host: flux-webhook.karitham.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: webhook-receiver
+                port:
+                  number: 80

@@ -4,3 +4,7 @@ resources:
   - objectstore.yaml
   - pg.yaml
   - ingress.yaml
+  - image-upgrader.yaml
+images:
+  - name: ghcr.io/karitham/waifubot
+    newTag: v1.4.1 # {"$imagepolicy": "waifubot:waifubot:tag"}

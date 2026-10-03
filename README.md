@@ -70,8 +70,8 @@ All web apps use `ingressClassName: tailscale` with host `<name>.${TSNET}`. Tail
 
 ## Core Infrastructure
 
-- [cert-manager](https://github.com/cert-manager/cert-manager) (v1.15.2) — Let's Encrypt certs, Cloudflare DNS01 for `0xf.fr`
-- [CNPG](https://github.com/cloudnative-pg/cloudnative-pg) (v1.26.0) — PostgreSQL operator, used by Outline and Waifubot
+- [cert-manager](https://github.com/cert-manager/cert-manager) (v1.21.2) — Let's Encrypt certs, Cloudflare DNS01 for `0xf.fr`
+- [CNPG](https://github.com/cloudnative-pg/cloudnative-pg) (v1.30.1) — PostgreSQL operator, used by Outline and Waifubot
 
 ## CI
 

@@ -19,4 +19,4 @@ generatorOptions:
     kustomize.toolkit.fluxcd.io/substitute: disabled
 images:
   - name: ghcr.io/anomalyco/opencode
-    newTag: 2.0.22 # {"$imagepolicy": "opencode:opencode:tag"}
+    newTag: 2.0.23 # {"$imagepolicy": "opencode:opencode:tag"}

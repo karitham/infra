@@ -7,4 +7,4 @@ resources:
   - image-upgrader.yaml
 images:
   - name: ghcr.io/karitham/waifubot
-    newTag: v1.4.7 # {"$imagepolicy": "waifubot:waifubot:tag"}
+    newTag: v1.4.8 # {"$imagepolicy": "waifubot:waifubot:tag"}

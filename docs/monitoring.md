@@ -60,6 +60,8 @@ Add a rule by adding an object to the `rules.json` array with a unique `uid`. Re
 
 Flux routing is managed from this repo. The notification controller posts error events from `flux-system` to Discord, using the Provider and Alert in `clusters/riko/flux-system/discord-notifications.yaml` and the SOPS-encrypted webhook in `clusters/riko/flux-system/discord-secret.yaml`.
 
+Only error events are delivered to Discord. kustomize-controller marks success events as commit status updates, and notification-controller drops commit status events for Discord, so successful reconciliations post nothing. To smoke test the route, create a temporary Kustomization with a nonexistent path and delete it after the failure arrives in Discord.
+
 Grafana routing is not managed from this repo. Re-apply the contact point and policy by hand after a stack rebuild:
 
 ```bash

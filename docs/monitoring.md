@@ -58,7 +58,9 @@ Add a rule by adding an object to the `rules.json` array with a unique `uid`. Re
 
 ## Notification routing
 
-Routing is not managed from this repo. Re-apply the contact point and policy by hand after a stack rebuild:
+Flux routing is managed from this repo. The notification controller posts error events from `flux-system` to Discord, using the Provider and Alert in `clusters/riko/flux-system/discord-notifications.yaml` and the SOPS-encrypted webhook in `clusters/riko/flux-system/discord-secret.yaml`.
+
+Grafana routing is not managed from this repo. Re-apply the contact point and policy by hand after a stack rebuild:
 
 ```bash
 # contact point (POST creates; a 409 means it exists)

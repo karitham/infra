@@ -9,4 +9,4 @@ resources:
 namespace: outline
 images:
   - name: outlinewiki/outline
-    newTag: 1.11.0 # {"$imagepolicy": "outline:outline:tag"}
+    newTag: 1.12.0 # {"$imagepolicy": "outline:outline:tag"}

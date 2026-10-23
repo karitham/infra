@@ -1,0 +1,184 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: albedo
+spec:
+  replicas: 1
+  # Albedo stores its database on a ReadWriteOnce PVC. Do not run two servers
+  # against it during a rollout.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: albedo
+  template:
+    metadata:
+      labels:
+        app: albedo
+    spec:
+      automountServiceAccountToken: false
+      initContainers:
+        - name: bootstrap-nix
+          image: nixos/nix:2.35.2@sha256:7a007c766426c1877758ddc5cb87a965ac131fc78c582ce0083d922d51ae945c
+          command:
+            - /bin/sh
+            - -c
+            - >-
+              if [ ! -e /persist/var/nix/db/db.sqlite ]; then cp -a /nix/. /persist/; fi
+          volumeMounts:
+            - name: nix
+              mountPath: /persist
+        - name: provision
+          image: nixos/nix:2.35.2@sha256:7a007c766426c1877758ddc5cb87a965ac131fc78c582ce0083d922d51ae945c
+          command:
+            - /bin/sh
+            - /etc/albedo/provision.sh
+          env:
+            - name: HOME
+              value: /root
+            - name: PATH
+              value: /nix/var/nix/profiles/default/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+          resources:
+            requests:
+              memory: 1Gi
+              cpu: "1"
+            limits:
+              memory: 8Gi
+              cpu: "4"
+          volumeMounts:
+            - name: home
+              mountPath: /root
+            - name: nix
+              mountPath: /nix
+            - name: scripts
+              mountPath: /etc/albedo
+        - name: tailscale
+          image: tailscale/tailscale:v1.104.2@sha256:b11583ad2e93e4671128538c88cf11f460444a5d7e449311dd1933a400ab849d
+          restartPolicy: Always
+          env:
+            - name: TS_HOSTNAME
+              value: albedo
+            - name: TS_USERSPACE
+              value: "false"
+            - name: TS_STATE_DIR
+              value: /state/tailscale
+            - name: TS_KUBE_SECRET
+              value: ""
+            - name: TS_AUTH_ONCE
+              value: "true"
+            - name: TS_SOCKET
+              value: /run/tailscale/tailscaled.sock
+            - name: TS_EXTRA_ARGS
+              value: --advertise-tags=tag:k8s
+            - name: TS_AUTHKEY
+              valueFrom:
+                secretKeyRef:
+                  name: albedo-tailscale
+                  key: authkey
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+          startupProbe:
+            exec:
+              command:
+                - tailscale
+                - status
+                - --peers=false
+            periodSeconds: 2
+            failureThreshold: 90
+          resources:
+            requests:
+              memory: 32Mi
+              cpu: 50m
+            limits:
+              memory: 256Mi
+              cpu: 500m
+          volumeMounts:
+            - name: home
+              mountPath: /state
+            - name: tailscale-socket
+              mountPath: /run/tailscale
+      containers:
+        - name: albedo
+          image: nixos/nix:2.35.2@sha256:7a007c766426c1877758ddc5cb87a965ac131fc78c582ce0083d922d51ae945c
+          command:
+            - /root/.nix-profile-albedo/bin/albedo
+          args:
+            - web
+            - --no-open
+            - --port
+            - "4317"
+          env:
+            - name: HOME
+              value: /root
+            - name: USER
+              value: root
+            - name: ALBEDO_NO_BROWSER
+              value: "1"
+            - name: TS_SOCKET
+              value: /run/tailscale/tailscaled.sock
+            - name: PATH
+              value: /root/.nix-profile-albedo/bin:/nix/var/nix/profiles/default/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+            - name: SSL_CERT_FILE
+              value: /etc/ssl/certs/ca-certificates.crt
+            - name: GIT_SSL_CAINFO
+              value: /etc/ssl/certs/ca-certificates.crt
+            - name: NIX_SSL_CERT_FILE
+              value: /etc/ssl/certs/ca-certificates.crt
+          ports:
+            - name: web
+              containerPort: 4317
+          startupProbe:
+            exec:
+              command:
+                - /nix/var/nix/profiles/default/bin/bash
+                - -c
+                - exec 3<>/dev/tcp/127.0.0.1/4317
+            periodSeconds: 5
+            failureThreshold: 60
+          readinessProbe:
+            exec:
+              command:
+                - /nix/var/nix/profiles/default/bin/bash
+                - -c
+                - exec 3<>/dev/tcp/127.0.0.1/4317
+            periodSeconds: 10
+          livenessProbe:
+            exec:
+              command:
+                - /nix/var/nix/profiles/default/bin/bash
+                - -c
+                - exec 3<>/dev/tcp/127.0.0.1/4317
+            periodSeconds: 30
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 250m
+            limits:
+              memory: 4Gi
+              cpu: "2"
+          volumeMounts:
+            - name: home
+              mountPath: /root
+            - name: nix
+              mountPath: /nix
+            - name: workspace
+              mountPath: /workspace
+            - name: tailscale-socket
+              mountPath: /run/tailscale
+      volumes:
+        - name: home
+          persistentVolumeClaim:
+            claimName: albedo-home
+        - name: nix
+          persistentVolumeClaim:
+            claimName: albedo-nix
+        - name: workspace
+          persistentVolumeClaim:
+            claimName: albedo-workspace
+        - name: scripts
+          configMap:
+            name: albedo-scripts
+        - name: tailscale-socket
+          emptyDir: {}

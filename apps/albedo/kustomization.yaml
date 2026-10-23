@@ -1,0 +1,14 @@
+resources:
+  - ns.yaml
+  - secret.yaml
+  - pvc.yaml
+  - deployment.yaml
+configMapGenerator:
+  - name: albedo-scripts
+    files:
+      - provision.sh
+      - package.nix
+# Flux post-build substitution must not rewrite shell or Nix variables.
+generatorOptions:
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled

@@ -1,11 +1,11 @@
 # Volumes:
-#   opencode-home      - opencode database, auth, config (authoritative)
-#   opencode-nix       - nix store; rebuildable, safe to delete
-#   opencode-workspace - user projects (authoritative)
+#   albedo-home      - Albedo and Tailscale state (authoritative)
+#   albedo-nix       - Nix store; rebuildable, safe to delete
+#   albedo-workspace - user projects (authoritative)
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: opencode-home
+  name: albedo-home
 spec:
   accessModes:
     - ReadWriteOnce
@@ -16,18 +16,18 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: opencode-nix
+  name: albedo-nix
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 5Gi
+      storage: 20Gi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: opencode-workspace
+  name: albedo-workspace
 spec:
   accessModes:
     - ReadWriteOnce

@@ -28,7 +28,7 @@ patches:
       kind: Kustomization
       group: kustomize.toolkit.fluxcd.io
       version: v1
-      name: "^(memos|opencode|outline|pocket-id)$"
+      name: "^(memos|outline|pocket-id)$"
 resources:
   - flux-system
   - core

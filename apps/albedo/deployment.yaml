@@ -118,6 +118,13 @@ spec:
               value: "1"
             - name: TS_SOCKET
               value: /run/tailscale/tailscaled.sock
+            # The opencode-go extension reads this key when a profile defines
+            # no key.
+            - name: OPENCODE_GO_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: albedo-providers
+                  key: OPENCODE_GO_API_KEY
             - name: PATH
               value: /root/.nix-profile-albedo/bin:/nix/var/nix/profiles/default/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
             - name: SSL_CERT_FILE

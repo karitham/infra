@@ -1,8 +1,9 @@
 #!/bin/sh
 set -eu
 
-ALBEDO_REV=561f4eb5e3a78445f3af4524d579d5f839e99cf0
-ALBEDO_SHA256=4c3bafde94def89f578d237ad534997fe671f830de377c9e471d7c5075d5cf21
+# https://tangled.org/karitham.dev/albedo/commit/3dac947eb3e30677f312627d55506b1b147392f4
+ALBEDO_REV=3dac947eb3e30677f312627d55506b1b147392f4
+ALBEDO_SHA256=9e84ca874f4734d4cbf36f61f3a432459e42e63c2ce0f984395f419cd3d918a6
 ARCHIVE=/tmp/albedo-source.tar.gz
 SOURCE=/tmp/albedo-source
 
@@ -13,7 +14,7 @@ sandbox = true
 build-users-group = nixbld
 EOF
 
-curl -fsSL "https://tangled.org/okami.mom/albedo/archive/$ALBEDO_REV.tar.gz" -o "$ARCHIVE"
+curl -fsSL "https://tangled.org/karitham.dev/albedo/archive/$ALBEDO_REV.tar.gz" -o "$ARCHIVE"
 echo "$ALBEDO_SHA256  $ARCHIVE" | sha256sum -c -
 tar -xzf "$ARCHIVE" --strip-components=1 -C "$SOURCE"
 

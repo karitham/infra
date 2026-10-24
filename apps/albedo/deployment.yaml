@@ -105,8 +105,17 @@ spec:
           command:
             - /root/.nix-profile-albedo/bin/albedo
           args:
+            # --foreground: since albedo web backgrounds itself by default,
+            # and pid 1 exiting would restart this container forever.
             - web
+            - --foreground
             - --no-open
+            # --tailnet-https points `tailscale serve` (the sidecar beside us)
+            # at this listener: it fetches a certificate for the pod's
+            # MagicDNS name and proxies https to it, so the browser gets a
+            # secure origin and the page's Origin header matches. Replaces the
+            # hand-run `tailscale serve` and needs no serve config here.
+            - --tailnet-https
             - --port
             - "4317"
           env:

@@ -69,6 +69,9 @@
               mkdir -p root run/tailscale tmp usr/bin var/tmp workspace
               # Scripts outside the Nix store look for /usr/bin/env.
               ln -sf /bin/env usr/bin/env
+              # Erlang reads the OS trust store, not SSL_CERT_FILE.
+              mkdir -p etc/ssl/certs
+              ln -sf ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt etc/ssl/certs/ca-certificates.crt
             '';
             config = {
               Env = [
@@ -78,9 +81,9 @@
                 "PATH=/usr/bin:/bin:${nixpkgs.lib.makeBinPath runtimeTools}"
                 "ALBEDO_NO_BROWSER=1"
                 "TS_SOCKET=/run/tailscale/tailscaled.sock"
-                "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-certificates.crt"
-                "GIT_SSL_CAINFO=${pkgs.cacert}/etc/ssl/certs/ca-certificates.crt"
-                "NIX_SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-certificates.crt"
+                "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
+                "GIT_SSL_CAINFO=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
+                "NIX_SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
                 "LANG=C.UTF-8"
                 "TZ=UTC"
                 "TZDIR=${pkgs.tzdata}/share/zoneinfo"

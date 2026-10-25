@@ -3,3 +3,4 @@ kubeconfig.yaml
 .decrypted*
 data-alloy
 result
+result-*

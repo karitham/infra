@@ -60,11 +60,6 @@ jobs:
           if [ -n "${REVTAG}" ]; then
             copy "${REVTAG}"
           fi
-      - name: Make the package public
-        continue-on-error: true
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh api --method PATCH /user/packages/container/albedo -f visibility=public
       - name: Summary
         run: |
           {

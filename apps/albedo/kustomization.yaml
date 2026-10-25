@@ -6,4 +6,4 @@ resources:
   - image-upgrader.yaml
 images:
   - name: ghcr.io/karitham/albedo
-    newTag: main-ceb0f5a # {"$imagepolicy": "albedo:albedo:tag"}
+    newTag: main-20261025T162128Z-757b640 # {"$imagepolicy": "albedo:albedo:tag"}

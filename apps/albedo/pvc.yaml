@@ -1,6 +1,5 @@
 # Volumes:
 #   albedo-home      - Albedo and Tailscale state (authoritative)
-#   albedo-nix       - Nix store; rebuildable, safe to delete
 #   albedo-workspace - user projects (authoritative)
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -12,17 +11,6 @@ spec:
   resources:
     requests:
       storage: 1Gi
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: albedo-nix
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 20Gi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

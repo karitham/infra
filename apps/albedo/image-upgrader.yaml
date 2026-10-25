@@ -1,0 +1,46 @@
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: albedo
+spec:
+  image: ghcr.io/karitham/albedo
+  interval: 15m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: albedo
+spec:
+  imageRepositoryRef:
+    name: albedo
+  filterTags:
+    # The workflow's build tag, newest last. The revision alias it also
+    # pushes has no timestamp and is deliberately not matched.
+    pattern: "^main-[0-9]{8}T[0-9]{6}Z-[0-9a-f]{7}$"
+  policy:
+    alphabetical:
+      order: asc
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageUpdateAutomation
+metadata:
+  name: albedo
+spec:
+  interval: 30m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  git:
+    checkout:
+      ref:
+        branch: main
+    commit:
+      author:
+        email: fluxcdbot@users.noreply.github.com
+        name: fluxcdbot
+      messageTemplate: "apps/albedo: {{range .Changed.Changes}}{{print .OldValue}} -> {{println .NewValue}}{{end}}"
+    push:
+      branch: main
+  update:
+    path: ./apps/albedo

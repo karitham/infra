@@ -18,40 +18,6 @@ spec:
     spec:
       automountServiceAccountToken: false
       initContainers:
-        - name: bootstrap-nix
-          image: nixos/nix:2.35.2@sha256:7a007c766426c1877758ddc5cb87a965ac131fc78c582ce0083d922d51ae945c
-          command:
-            - /bin/sh
-            - -c
-            - >-
-              if [ ! -e /persist/var/nix/db/db.sqlite ]; then cp -a /nix/. /persist/; fi
-          volumeMounts:
-            - name: nix
-              mountPath: /persist
-        - name: provision
-          image: nixos/nix:2.35.2@sha256:7a007c766426c1877758ddc5cb87a965ac131fc78c582ce0083d922d51ae945c
-          command:
-            - /bin/sh
-            - /etc/albedo/provision.sh
-          env:
-            - name: HOME
-              value: /root
-            - name: PATH
-              value: /nix/var/nix/profiles/default/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-          resources:
-            requests:
-              memory: 1Gi
-              cpu: "1"
-            limits:
-              memory: 8Gi
-              cpu: "4"
-          volumeMounts:
-            - name: home
-              mountPath: /root
-            - name: nix
-              mountPath: /nix
-            - name: scripts
-              mountPath: /etc/albedo
         - name: tailscale
           image: tailscale/tailscale:v1.104.2@sha256:b11583ad2e93e4671128538c88cf11f460444a5d7e449311dd1933a400ab849d
           restartPolicy: Always
@@ -101,21 +67,23 @@ spec:
               mountPath: /run/tailscale
       containers:
         - name: albedo
-          image: nixos/nix:2.35.2@sha256:7a007c766426c1877758ddc5cb87a965ac131fc78c582ce0083d922d51ae945c
-          command:
-            - /root/.nix-profile-albedo/bin/albedo
+          image: ghcr.io/karitham/albedo:main-ceb0f5a
+          imagePullPolicy: IfNotPresent
           args:
             # --foreground: since albedo web backgrounds itself by default,
             # and pid 1 exiting would restart this container forever.
             - web
             - --foreground
             - --no-open
-            # --tailnet-https points `tailscale serve` (the sidecar beside us)
+            # --tailnet-https points tailscale serve (the sidecar beside us)
             # at this listener: it fetches a certificate for the pod's
             # MagicDNS name and proxies https to it, so the browser gets a
-            # secure origin and the page's Origin header matches. Replaces the
-            # hand-run `tailscale serve` and needs no serve config here.
+            # secure origin and the page's Origin header matches.
             - --tailnet-https
+            # --tailnet-auth signs a tailnet device in without a launch link.
+            # The tailnet is the trust boundary; every device on it controls
+            # this daemon.
+            - --tailnet-auth
             - --port
             - "4317"
           env:
@@ -134,21 +102,13 @@ spec:
                 secretKeyRef:
                   name: albedo-providers
                   key: OPENCODE_GO_API_KEY
-            - name: PATH
-              value: /root/.nix-profile-albedo/bin:/nix/var/nix/profiles/default/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-            - name: SSL_CERT_FILE
-              value: /etc/ssl/certs/ca-certificates.crt
-            - name: GIT_SSL_CAINFO
-              value: /etc/ssl/certs/ca-certificates.crt
-            - name: NIX_SSL_CERT_FILE
-              value: /etc/ssl/certs/ca-certificates.crt
           ports:
             - name: web
               containerPort: 4317
           startupProbe:
             exec:
               command:
-                - /nix/var/nix/profiles/default/bin/bash
+                - /bin/bash
                 - -c
                 - exec 3<>/dev/tcp/127.0.0.1/4317
             periodSeconds: 5
@@ -156,14 +116,14 @@ spec:
           readinessProbe:
             exec:
               command:
-                - /nix/var/nix/profiles/default/bin/bash
+                - /bin/bash
                 - -c
                 - exec 3<>/dev/tcp/127.0.0.1/4317
             periodSeconds: 10
           livenessProbe:
             exec:
               command:
-                - /nix/var/nix/profiles/default/bin/bash
+                - /bin/bash
                 - -c
                 - exec 3<>/dev/tcp/127.0.0.1/4317
             periodSeconds: 30
@@ -177,8 +137,6 @@ spec:
           volumeMounts:
             - name: home
               mountPath: /root
-            - name: nix
-              mountPath: /nix
             - name: workspace
               mountPath: /workspace
             - name: tailscale-socket
@@ -187,14 +145,8 @@ spec:
         - name: home
           persistentVolumeClaim:
             claimName: albedo-home
-        - name: nix
-          persistentVolumeClaim:
-            claimName: albedo-nix
         - name: workspace
           persistentVolumeClaim:
             claimName: albedo-workspace
-        - name: scripts
-          configMap:
-            name: albedo-scripts
         - name: tailscale-socket
           emptyDir: {}

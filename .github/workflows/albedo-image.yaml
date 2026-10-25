@@ -1,0 +1,75 @@
+name: albedo image
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - flake.nix
+      - flake.lock
+      - .github/workflows/albedo-image.yaml
+  workflow_dispatch:
+permissions:
+  contents: read
+  packages: write
+# Only the newest commit's image matters; a newer push cancels an in-flight
+# build.
+concurrency:
+  group: albedo-image-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  image:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@3138316df39ed29be04236d7ffc686fa525866aa # v23
+      - name: Restore Nix store cache
+        uses: nix-community/cache-nix-action@7df957e333c1e5da7721f60227dbba6d06080569 # v7
+        with:
+          primary-key: nix-albedo-${{ runner.os }}-${{ hashFiles('**/flake.lock') }}
+          restore-prefixes-first-match: nix-albedo-${{ runner.os }}-
+      - name: Build the image
+        run: nix build .#packages.aarch64-linux.albedo-image -L --out-link image
+      - name: Name the image
+        id: tag
+        run: |
+          stamp=$(date -u +%Y%m%dT%H%M%SZ)
+          echo "tag=main-${stamp}-${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+          # A revision tag makes the first rollout deterministic: the deployment
+          # can name the image before this workflow has ever pushed it.
+          rev=$(jq -r '.nodes.albedo.locked.rev // empty' flake.lock)
+          if [ -n "${rev}" ]; then
+            echo "revtag=main-${rev:0:7}" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push the image
+        env:
+          TAG: ${{ steps.tag.outputs.tag }}
+          REVTAG: ${{ steps.tag.outputs.revtag }}
+        run: |
+          copy() {
+            nix run nixpkgs#skopeo -- copy --insecure-policy --dest-creds "${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}" docker-archive:image "docker://ghcr.io/karitham/albedo:$1"
+          }
+          copy "${TAG}"
+          if [ -n "${REVTAG}" ]; then
+            copy "${REVTAG}"
+          fi
+      - name: Make the package public
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh api --method PATCH /user/packages/container/albedo -f visibility=public
+      - name: Summary
+        run: |
+          {
+            echo "### Albedo image"
+            echo ""
+            echo "Tag: \`${{ steps.tag.outputs.tag }}\`"
+            echo "Revision: \`${{ steps.tag.outputs.revtag }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"

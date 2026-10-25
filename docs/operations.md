@@ -42,9 +42,17 @@ kubectl get pods -A | grep -v Running         # nothing stuck?
 ### Adding an app
 
 1. `apps/<name>/` with manifests + `kustomization.yaml`.
-2. `clusters/riko/apps/<name>.yaml` — a Flux Kustomization, `path: ./apps/<name>`.
+2. `clusters/riko/apps/<name>.yaml`: a Flux Kustomization, `path: ./apps/<name>`.
 3. Add it to `clusters/riko/apps/kustomization.yaml`.
 4. Push.
+
+### Rebuilding the albedo image
+
+Albedo runs a prebuilt `aarch64` image built by Nix. `flake.nix` pins the fork revision in `albedo.url`, and `.github/workflows/albedo-image.yaml` builds `.#packages.aarch64-linux.albedo-image` on an arm runner and pushes it to `ghcr.io/karitham/albedo`. Flux image automation reads the `main-<timestamp>-<sha>` tags, updates the tag in `apps/albedo/kustomization.yaml`, and rolls the deployment.
+
+To move to a new upstream revision, merge upstream into the fork, push the fork, update `albedo.url` with the new revision, run `nix flake lock`, and commit. The workflow runs on the `flake.lock` change. It also pushes `main-<fork-revision>`, which the deployment uses as the first-rollout alias until a timestamped tag exists. The GHCR package must be public, because Flux and the kubelet read it without a pull secret.
+
+The fork adds `--tailnet-auth`, which signs a tailnet device in without a launch link. The tailnet is the trust boundary; every device on it controls the daemon. The image does not include Nix, so sessions cannot run `nix build` or `nix develop`.
 
 ### Adding a core component
 
@@ -101,5 +109,5 @@ nested Flux Kustomization with `wait: true`.
 ## Support matrix
 
 The cluster runs k3s 1.37, which is ahead of the tested Kubernetes range of
-every controller: Flux 2.9 supports 1.34–1.36, cert-manager 1.21 supports
-1.33–1.36, CNPG 1.30 supports 1.34–1.36. Treat further k8s bumps with care.
+every controller: Flux 2.9 supports 1.34 to 1.36, cert-manager 1.21 supports
+1.33 to 1.36, CNPG 1.30 supports 1.34 to 1.36. Treat further k8s bumps with care.

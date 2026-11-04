@@ -4,20 +4,21 @@
       "inputs": {
         "flake-parts": "flake-parts",
         "nixpkgs": "nixpkgs",
+        "tg": "tg",
         "treefmt-nix": "treefmt-nix",
         "usage-core": "usage-core"
       },
       "locked": {
-        "lastModified": 1792941395,
-        "narHash": "sha256-OU26M5OSht5A7TefZ7CX3iKirXRLoYasdQBLvLLlxlg=",
-        "ref": "refs/heads/main",
-        "rev": "ceb0f5a39b6879ff6ae039c7962f8a853815384a",
-        "revCount": 1086,
+        "lastModified": 1793803982,
+        "narHash": "sha256-DBGXxu0kU1AWwY5gDWPXJ+WqU4+Ptyu0vd7LFWq6fuM=",
+        "ref": "main",
+        "rev": "822d9c44566f576640189b4e73080b57d90ea40f",
+        "revCount": 1652,
         "type": "git",
         "url": "https://tangled.org/karitham.dev/albedo"
       },
       "original": {
-        "rev": "ceb0f5a39b6879ff6ae039c7962f8a853815384a",
+        "ref": "main",
         "type": "git",
         "url": "https://tangled.org/karitham.dev/albedo"
       }
@@ -106,6 +107,22 @@
         "albedo": "albedo",
         "nixpkgs": "nixpkgs_2",
         "treefmt-nix": "treefmt-nix_2"
+      }
+    },
+    "tg": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793637228,
+        "narHash": "sha256-lneQ7RTa80lmUu4Cs4oMAC5vU1m2F20kXMdx/eZLulc=",
+        "ref": "refs/heads/master",
+        "rev": "3a044d3226f722282289d427a4ecdfc936f45e7e",
+        "revCount": 186,
+        "type": "git",
+        "url": "https://tangled.org/aly.codes/tg"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://tangled.org/aly.codes/tg"
       }
     },
     "treefmt-nix": {

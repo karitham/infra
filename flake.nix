@@ -4,7 +4,7 @@
     treefmt-nix.url = "github:numtide/treefmt-nix";
     # Fork of okami.mom/albedo carrying the --tailnet-auth patch. Bump the rev,
     # run nix flake lock, and the image workflow rebuilds the app.
-    albedo.url = "git+https://tangled.org/karitham.dev/albedo?rev=ceb0f5a39b6879ff6ae039c7962f8a853815384a";
+    albedo.url = "git+https://tangled.org/karitham.dev/albedo?ref=main";
   };
   outputs =
     {

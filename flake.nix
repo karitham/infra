@@ -5,6 +5,15 @@
     # Fork of okami.mom/albedo carrying the --tailnet-auth patch. Bump the rev,
     # run nix flake lock, and the image workflow rebuilds the app.
     albedo.url = "git+https://tangled.org/karitham.dev/albedo?ref=main";
+    # The MCP servers and agent skills the image carries come from the dotfiles
+    # flake, so a container and a laptop are configured from one place. A
+    # dotfiles change reaches the image the next time this input is bumped
+    # (`nix flake lock --update-input dotfiles`); a fork revision bump does not
+    # carry one.
+    dotfiles = {
+      url = "github:karitham/dotfiles";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs =
     {
@@ -12,6 +21,7 @@
       nixpkgs,
       treefmt-nix,
       albedo,
+      dotfiles,
     }:
     let
       supportedSystems = [
@@ -63,6 +73,11 @@
               pkgs.dockerTools.fakeNss
               pkgs.cacert
               tailscale
+              # /etc/albedo holds the extensions.json and skills the dotfiles
+              # declare, and /bin/albedo-seed installs them into the home
+              # volume; the deployment runs it before the daemon starts.
+              dotfiles.packages.${system}.albedo-config
+              dotfiles.packages.${system}.albedo-seed
             ]
             ++ runtimeTools;
             extraCommands = ''

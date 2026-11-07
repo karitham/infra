@@ -18,6 +18,44 @@ spec:
     spec:
       automountServiceAccountToken: false
       initContainers:
+        # The image carries the dotfiles' albedo config at /etc/albedo: the MCP
+        # servers, the agent skills, and the seed script that installs them.
+        # The home volume covers the image's /root, so the config is merged
+        # into it on every start, keeping whatever albedo wrote there itself.
+        - name: config
+          image: ghcr.io/karitham/albedo:main-ceb0f5a
+          imagePullPolicy: IfNotPresent
+          # The guard covers the rollout that introduces this container: an
+          # image built before the seed script existed has no /bin/albedo-seed,
+          # and the pod should start anyway rather than wait for the next tag.
+          command:
+            - /bin/bash
+            - -c
+            - |
+              if [ -x /bin/albedo-seed ]; then
+                exec /bin/albedo-seed
+              fi
+              echo 'this image carries no /bin/albedo-seed; nothing to install' >&2
+          env:
+            # Exa reads its key from creds.json, not from the environment, so
+            # the seed copies this one in. Absent from the secret, Exa is left
+            # without a key and web search fails with a message saying so.
+            - name: EXA_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: albedo-providers
+                  key: EXA_API_KEY
+                  optional: true
+          resources:
+            requests:
+              memory: 16Mi
+              cpu: 10m
+            limits:
+              memory: 64Mi
+              cpu: 200m
+          volumeMounts:
+            - name: home
+              mountPath: /root
         - name: tailscale
           image: tailscale/tailscale:v1.104.2@sha256:b11583ad2e93e4671128538c88cf11f460444a5d7e449311dd1933a400ab849d
           restartPolicy: Always
@@ -102,6 +140,14 @@ spec:
                 secretKeyRef:
                   name: albedo-providers
                   key: OPENCODE_GO_API_KEY
+            # The github MCP server sends this as its bearer token; without it
+            # that one server fails to connect and the rest are unaffected.
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: albedo-providers
+                  key: GITHUB_TOKEN
+                  optional: true
           ports:
             - name: web
               containerPort: 4317

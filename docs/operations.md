@@ -54,6 +54,14 @@ To move to a new upstream revision, merge upstream into the fork, push the fork,
 
 The fork adds `--tailnet-auth`, which signs a tailnet device in without a launch link. The tailnet is the trust boundary; every device on it controls the daemon. The image does not include Nix, so sessions cannot run `nix build` or `nix develop`.
 
+#### Configuration inside the image
+
+The MCP servers and the agent skills come from the `dotfiles` flake input, not from this repository: `dotfiles.packages.<system>.albedo-config` is the `/etc/albedo` tree (`extensions.json`, `skills/`), and `dotfiles.packages.<system>.albedo-seed` is the script that installs it. Both are in the image's `contents`. Editing the servers or a skill therefore means editing `modules/agents` in the dotfiles, pushing it, and running `nix flake lock --update-input dotfiles` here; the workflow rebuilds on the lock change. A fork revision bump alone does not pick one up.
+
+The home volume is mounted at `/root`, which hides the image's `/root`, so the `config` init container runs `albedo-seed` on every pod start. It merges the flake's servers into `$HOME/.albedo/extensions.json` (nix wins per field, servers deleted in the flake are dropped, everything albedo wrote itself survives), links each skill into `$HOME/.agents/skills`, and writes `exa.apiKey` into `$HOME/.albedo/creds.json` when `EXA_API_KEY` is in the secret. Running it by hand in a container shows the same merge with `--dry-run`.
+
+Two secrets in `albedo-providers` are optional: `EXA_API_KEY` (copied into `creds.json` by the init container) and `GITHUB_TOKEN` (the github MCP server's bearer token). Without them Exa has no key and the github server fails to connect; every other server and feature works.
+
 ### Adding a core component
 
 Core lives under `clusters/riko/core/` and is applied by the root sync, so

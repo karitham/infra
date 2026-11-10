@@ -4,7 +4,7 @@
     treefmt-nix.url = "github:numtide/treefmt-nix";
     # Fork of okami.mom/albedo carrying the --tailnet-auth patch. Bump the rev,
     # run nix flake lock, and the image workflow rebuilds the app.
-    albedo.url = "git+https://tangled.org/karitham.dev/albedo?ref=main";
+    albedo.url = "git+https://tangled.org/karitham.dev/albedo?ref=tailnet-machines";
     # The MCP servers and agent skills the image carries come from the dotfiles
     # flake, so a container and a laptop are configured from one place. A
     # dotfiles change reaches the image the next time this input is bumped

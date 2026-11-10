@@ -178,8 +178,7 @@ spec:
               memory: 256Mi
               cpu: 250m
             limits:
-              memory: 4Gi
-              cpu: "2"
+              memory: 16Gi
           volumeMounts:
             - name: home
               mountPath: /root

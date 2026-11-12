@@ -10,11 +10,11 @@
         "usage-core": "usage-core"
       },
       "locked": {
-        "lastModified": 1794308708,
-        "narHash": "sha256-rz082R47/bMhcRZIlslEX4fWnLeZf0FTCC/CJDmGKUY=",
+        "lastModified": 1794494455,
+        "narHash": "sha256-YtpkoMMl1S3Dpq2xnK2l31vPX+ncrrN0Amx7aFcmvX0=",
         "ref": "tailnet-machines",
-        "rev": "1a21f6a22cc99618ecb61f901fe180da9c22f52a",
-        "revCount": 1826,
+        "rev": "e23955181e38983b430cdfda936c9213e30feef4",
+        "revCount": 1991,
         "type": "git",
         "url": "https://tangled.org/karitham.dev/albedo"
       },
@@ -344,11 +344,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794278858,
-        "narHash": "sha256-rkrJwLgLSHBnXfgoSKIDa+2LLGdTqynsV3GAxOTGhUU=",
+        "lastModified": 1793979366,
+        "narHash": "sha256-7OoWDsYO9teiPxl0QdlS5lYE20Pue8/5mpscSL32FUA=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "82ce401aa350502897c3f2e85f384d61cd3b0b6d",
+        "rev": "2c0c1f01521469cf0271180c453c79782d53c2f6",
         "type": "github"
       },
       "original": {

@@ -2,9 +2,13 @@
   inputs = {
     nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1.*.tar.gz";
     treefmt-nix.url = "github:numtide/treefmt-nix";
-    # Fork of okami.mom/albedo carrying the --tailnet-auth patch. Bump the rev,
-    # run nix flake lock, and the image workflow rebuilds the app.
-    albedo.url = "git+https://tangled.org/karitham.dev/albedo?ref=tailnet-machines";
+    # Fork of okami.mom/albedo; its main carries the --tailnet-auth and
+    # --tailnet-https patches the deployment runs with. Bump the rev, run nix
+    # flake lock, and the image workflow rebuilds the app. Track the default
+    # branch and never a side branch: the fork's branches are force-pushed, and
+    # a locked rev that no longer exists upstream cannot be fetched at all, so
+    # the build fails on any machine that has not already cached it.
+    albedo.url = "git+https://tangled.org/karitham.dev/albedo";
     # The MCP servers and agent skills the image carries come from the dotfiles
     # flake, so a container and a laptop are configured from one place. A
     # dotfiles change reaches the image the next time this input is bumped
@@ -13,6 +17,12 @@
     dotfiles = {
       url = "github:karitham/dotfiles";
       inputs.nixpkgs.follows = "nixpkgs";
+      # The dotfiles flake pins albedo itself, and that pin outlives the fork
+      # revision it names: once the fork force-pushes past it, its own lock
+      # cannot be fetched and every flake here fails to evaluate. Following
+      # this input keeps one albedo version. Only the image's packages come
+      # from dotfiles, so nothing else rides on the choice.
+      inputs.albedo.follows = "albedo";
     };
   };
   outputs =

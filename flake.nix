@@ -8,7 +8,7 @@
     # branch and never a side branch: the fork's branches are force-pushed, and
     # a locked rev that no longer exists upstream cannot be fetched at all, so
     # the build fails on any machine that has not already cached it.
-    albedo.url = "git+https://tangled.org/karitham.dev/albedo";
+    albedo.url = "git+https://tangled.org/karitham.dev/albedo?ref=tailnet-auth";
     # The MCP servers and agent skills the image carries come from the dotfiles
     # flake, so a container and a laptop are configured from one place. A
     # dotfiles change reaches the image the next time this input is bumped
